@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Devart (www.devart.com), the Project Options File -->
+<!-- Modifying this generated file will probably render it invalid -->
+<Options Version="3.0">
+  <Documents>
+    <Document Moniker=".\Scripts\Temp 1.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
+    <Document Moniker=".\Procedures\sp_permission_read.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" Active="True" />
+  </Documents>
+  <Services>
+    <Service GUID="{c7b76517-6978-4a0b-8d38-57b7f7223edb}">
+      <Persist />
+    </Service>
+    <Service GUID="{661ce5b0-2dad-4ebf-b060-c08542ecaf7e}">
+      <Persist />
+    </Service>
+    <Service GUID="{e86507ae-fc27-47e0-925b-3c3e655520d4}">
+      <Persist>
+        <Configurations>
+          <Active>Default</Active>
+        </Configurations>
+      </Persist>
+    </Service>
+    <Service GUID="{811fba21-97c2-44b6-8c1c-eae1f1315f2d}">
+      <Persist />
+    </Service>
+  </Services>
+</Options>
