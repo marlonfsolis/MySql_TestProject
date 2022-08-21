@@ -5,22 +5,22 @@
 -- SELECT @Out_Param;
 -- 
 
-DROP PROCEDURE IF EXISTS sp_Permission_Read;
-
-CREATE PROCEDURE sp_Permission_Read 
+DROP PROCEDURE IF EXISTS sp_permissions_read;
+DELIMITER $$
+CREATE PROCEDURE sp_permissions_read 
 (
   IN offsetRows int,
   IN fetchRows int,
   IN filterJson json,
   IN searchJson json,
   OUT result json
-)
+) 
 BEGIN
 
   --
   -- variables
   --
-  DECLARE procedure_name varchar(100) DEFAULT 'sp_Permission_Read';
+  DECLARE procedure_name varchar(100) DEFAULT 'sp_permissions_read';
   DECLARE error_msg varchar(1000) DEFAULT '';
   DECLARE error_log_id int DEFAULT 0;
   DECLARE p_count int DEFAULT 0;
@@ -33,6 +33,20 @@ BEGIN
   DECLARE description_search varchar(1000);
 
 
+  --
+  -- error handling declarations
+  --
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+
+    CALL sp_handle_error(procedure_name, result);
+    SELECT result;
+  END;
+
+
+  --
+  -- temp tables
+  --
   DROP TABLE IF EXISTS log_message CASCADE;
   CREATE TEMPORARY TABLE log_message (
     log_msg varchar(5000),
@@ -42,6 +56,7 @@ BEGIN
   DROP TABLE IF EXISTS response;
   CREATE TEMPORARY TABLE response 
     SELECT * FROM permissions p LIMIT 0;
+
 
 
   --
@@ -85,6 +100,7 @@ BEGIN
   INTO name_filter,
     description_filter
   ;
+  INSERT INTO log_message VALUES ('get filter values done', NOW());
 
 
   --
@@ -96,6 +112,7 @@ BEGIN
   INTO name_filter,
     description_filter
   ;
+  INSERT INTO log_message VALUES ('get search values done', NOW());
 
 
 
@@ -116,9 +133,10 @@ BEGIN
   AND (name_search IS NULL OR name_search LIKE p.description)
   AND (description_search IS NULL OR description_search LIKE p.description)
   ;
+  INSERT INTO log_message VALUES ('get final result done', NOW());
 
   
-  SELECT FOUND_ROWS() INTO p_count;
+  SELECT COUNT(*) FROM response r INTO p_count;
   SELECT JSON_SET(result, '$.recordCount', p_count) INTO result;
 
 

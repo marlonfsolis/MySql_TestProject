@@ -4,6 +4,7 @@
 CREATE TABLE groups_roles(
   name varchar(100) NOT NULL,
   description varchar(1000),
+  
   PRIMARY KEY (name)
 )
 ENGINE = INNODB,

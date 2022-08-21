@@ -183,9 +183,6 @@
 -- CALL script();
 
 
-CALL sp_Permission_Read(0, NULL,NULL,NULL, @result);
+CALL sp_Permission_Read(0, 0, NULL, NULL, @result);
 SELECT @result;
 
-
-
--- SELECT IFNULL( CAST(NULL AS char), 'IS NULL');
