@@ -75,6 +75,7 @@ BEGIN
       '$.recordCount', 0)
     INTO result;
 
-END$$
+END
+$$
 
 DELIMITER ;

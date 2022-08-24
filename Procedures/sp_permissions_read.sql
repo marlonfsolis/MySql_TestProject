@@ -92,4 +92,7 @@ BEGIN
   FROM response r;
 
 
-END;
+END
+$$
+
+DELIMITER ;

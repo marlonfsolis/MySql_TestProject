@@ -183,9 +183,9 @@
 -- CALL script();
 
 
-CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
-SELECT @result;
+-- CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
+-- SELECT @result;
 
 
-CALL sp_permissions_read('Permission1111', @result);
-SELECT @result;
+-- CALL sp_permissions_read('Permission1111', @result);
+-- SELECT @result;
