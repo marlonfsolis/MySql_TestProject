@@ -1,13 +1,14 @@
 ﻿--
--- Get permissions list
+-- Get permissions list.
+-- The list can be filteres and paginated.
 --
--- CALL sp_Permission_Read(1, @Out_Param);
+-- CALL sp_Permission_Read(0, 10, '{"name":"Permission1"}', '{"description":"%"}', @Out_Param);
 -- SELECT @Out_Param;
 -- 
 
-DROP PROCEDURE IF EXISTS sp_permissions_read;
+DROP PROCEDURE IF EXISTS sp_permissions_readlist;
 DELIMITER $$
-CREATE PROCEDURE sp_permissions_read 
+CREATE PROCEDURE sp_permissions_readlist 
 (
   IN offsetRows int,
   IN fetchRows int,

@@ -9,7 +9,8 @@
     <Folder Name="Triggers" />
     <Folder Name="Views" />
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error.sql" />
-    <File RelPath="Procedures" Link=".\Procedures\sp_permission_read.sql" />
+    <File RelPath="Procedures" Link=".\Procedures\sp_permissions_read.sql" />
+    <File RelPath="Procedures" Link=".\Procedures\sp_permissions_readlist.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_write.sql" />
     <File RelPath="Scripts" Link=".\Scripts\Temp 1.sql" />
     <File RelPath="Tables" Link=".\Tables\error_log.sql" />
@@ -34,7 +35,7 @@
         <File RelPath="Tables" Name="users.sql" BuildAction="Build" />
         <File RelPath="Tables" Name="permissions.sql" BuildAction="Build" />
         <File RelPath="Tables" Name="flyway_schema_history.Tables.sql" BuildAction="Build" />
-        <File RelPath="Procedures" Name="sp_permission_read.sql" BuildAction="Build" />
+        <File RelPath="Procedures" Name="sp_permissions_readlist.sql" BuildAction="Build" />
         <File RelPath="Tables" Name="error_log_trace.sql" BuildAction="Build" />
         <File RelPath="Scripts" Name="Temp 1.sql" BuildAction="Build" />
         <File RelPath="Tables" Name="groups_roles.sql" BuildAction="Build" />
@@ -42,6 +43,7 @@
         <File RelPath="Tables" Name="error_log.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_handle_error.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_permissions_write.sql" BuildAction="Build" />
+        <File RelPath="Procedures" Name="sp_permissions_read.sql" BuildAction="Build" />
         <File RelPath="" Name="PostDeployment.sql" BuildAction="Build" />
       </Build>
     </Configuration>
