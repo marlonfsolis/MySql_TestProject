@@ -195,18 +195,42 @@
 -- CALL script();
 
 
--- CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
--- SELECT @result;
 
+--
+-- Procedures calls
+--
 
--- CALL sp_permissions_read('Permission1111', @result);
--- SELECT @result;
-
-CALL sp_permissions_write('{"name":"Permission4", "description":"Permission 4"}', @Out_Param);
+CALL sp_permissions_delete('Permission3', @Out_Param);
 SELECT @Out_Param;
 
--- SELECT * FROM error_log el;
--- SELECT * FROM error_log_trace elt;
+
+
+
+SELECT * FROM permissions p;
+SELECT * FROM groups_roles gr;
+SELECT * FROM permissions_groups pg;
+DELETE LOW_PRIORITY QUICK
+  FROM permissions
+  WHERE name = 'Permission3'
+  LIMIT 1;
+
+
+
+CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
+SELECT @result;
+
+
+-- CALL sp_permissions_read('Permission1', @result);
+-- SELECT @result;
+
+-- CALL sp_permissions_write('{"name":"Permission4", "description":"Permission 4"}', @Out_Param);
+-- SELECT @Out_Param;
+
+
+
+
+SELECT * FROM error_log el;
+SELECT * FROM error_log_trace elt;
 
 -- TRUNCATE error_log_trace;
 -- DELETE FROM error_log;

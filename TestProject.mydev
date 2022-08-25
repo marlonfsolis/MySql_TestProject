@@ -9,6 +9,7 @@
     <Folder Name="Triggers" />
     <Folder Name="Views" />
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error.sql" />
+    <File RelPath="Procedures" Link=".\Procedures\sp_permissions_delete.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_read.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_readlist.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_write.sql" />
@@ -44,6 +45,7 @@
         <File RelPath="Procedures" Name="sp_handle_error.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_permissions_write.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_permissions_read.sql" BuildAction="Build" />
+        <File RelPath="Procedures" Name="sp_permissions_delete.sql" BuildAction="Build" />
         <File RelPath="" Name="PostDeployment.sql" BuildAction="Build" />
       </Build>
     </Configuration>
