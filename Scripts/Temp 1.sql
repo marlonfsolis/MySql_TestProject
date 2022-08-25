@@ -7,13 +7,16 @@
 
 --
 -- FOUND_ROWS() - Row Number returned by last select statement
+-- Do not use it. Wil be deprecated
+-- https://dev.mysql.com/doc/refman/8.0/en/information-functions.html#function_found-rows
+-- Use temp table and then count the rows on it.
 --
 -- SELECT * FROM permissions p;
 -- SELECT
 --   FOUND_ROWS();
 
 --
--- ROW_COUNT() - Row number affected by the las update
+-- ROW_COUNT() - Row number affected by the last update
 --
 -- UPDATE permissions p SET p.description = CONCAT(p.description, '_');
 -- UPDATE permissions p SET p.description = REPLACE(p.description,'_','');
@@ -48,6 +51,15 @@
 -- INSERT INTO permissions (name, description)
 --   VALUES ('Permission3', 'Permission 3')
 -- ;
+
+-- INSERT DELAYED INTO permissions
+--   SET name = 'String1',
+--       description = 'description';
+-- SELECT * FROM permissions p;
+-- DELETE FROM permissions WHERE name = 'String1';
+
+
+
 -- 
 -- 
 -- -- Updating
@@ -189,3 +201,12 @@
 
 -- CALL sp_permissions_read('Permission1111', @result);
 -- SELECT @result;
+
+CALL sp_permissions_write('{"name":"Permission4", "description":"Permission 4"}', @Out_Param);
+SELECT @Out_Param;
+
+-- SELECT * FROM error_log el;
+-- SELECT * FROM error_log_trace elt;
+
+-- TRUNCATE error_log_trace;
+-- DELETE FROM error_log;

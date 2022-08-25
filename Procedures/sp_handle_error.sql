@@ -12,7 +12,7 @@ DELIMITER $$
 CREATE PROCEDURE sp_handle_error 
 (
   IN procedure_name varchar(100),
-  OUT result json
+  INOUT result json
 ) 
 BEGIN
 
@@ -27,10 +27,12 @@ BEGIN
   --
   -- get error info
   --
-  GET DIAGNOSTICS CONDITION 1 
+  GET DIAGNOSTICS @cno = NUMBER;
+  GET CURRENT DIAGNOSTICS CONDITION @cno
     @sqlstate = RETURNED_SQLSTATE, 
     @errno = MYSQL_ERRNO,
     @text = MESSAGE_TEXT;
+--   SELECT @sqlstate, @errno, @text;
 
   SELECT 
     CONCAT('STORED PROC ERROR', 
@@ -53,6 +55,7 @@ BEGIN
   SELECT LAST_INSERT_ID()
     INTO error_logid;
 
+
   CALL sys.table_exists('AppTemplateDb', 'log_message', @table_type);
   IF @table_type != '' THEN
     INSERT INTO error_log_trace (error_logid, trace_message, trace_date)
@@ -61,6 +64,7 @@ BEGIN
         lm.log_msg,
         lm.log_date
       FROM log_message lm;    
+
   END IF;
 
   
@@ -68,12 +72,11 @@ BEGIN
   --
   -- send error info back
   --
-  SELECT JSON_SET(result, 
+  SET result = JSON_SET(result, 
       '$.success', FALSE, 
       '$.msg', error_msg, 
       '$.errorLogId', error_logid, 
-      '$.recordCount', 0)
-    INTO result;
+      '$.recordCount', 0);
 
 END
 $$
