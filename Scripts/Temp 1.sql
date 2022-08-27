@@ -200,24 +200,12 @@
 -- Procedures calls
 --
 
-CALL sp_permissions_delete('Permission3', @Out_Param);
-SELECT @Out_Param;
+-- CALL sp_permissions_delete('Permission3', @Out_Param);
+-- SELECT @Out_Param;
 
 
-
-
-SELECT * FROM permissions p;
-SELECT * FROM groups_roles gr;
-SELECT * FROM permissions_groups pg;
-DELETE LOW_PRIORITY QUICK
-  FROM permissions
-  WHERE name = 'Permission3'
-  LIMIT 1;
-
-
-
-CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
-SELECT @result;
+-- CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
+-- SELECT @result;
 
 
 -- CALL sp_permissions_read('Permission1', @result);
@@ -227,10 +215,18 @@ SELECT @result;
 -- SELECT @Out_Param;
 
 
+-- CALL sp_groups_readlist(0, 0, NULL, NULL, @result);
+-- SELECT @result;
 
 
-SELECT * FROM error_log el;
-SELECT * FROM error_log_trace elt;
+-- CALL sp_groups_read('Group1', @result);
+-- SELECT @result;
+
+
+
+
+SELECT * FROM error_log el ORDER BY el.error_detail DESC;
+SELECT * FROM error_log_trace elt ORDER BY elt.trace_date DESC;
 
 -- TRUNCATE error_log_trace;
 -- DELETE FROM error_log;
