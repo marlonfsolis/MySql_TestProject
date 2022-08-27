@@ -225,9 +225,8 @@ SELECT @result;
 
 
 
-SELECT * FROM error_log el ORDER BY el.error_detail DESC;
-SELECT * FROM error_log_trace elt ORDER BY elt.trace_date DESC;
-
+-- SELECT * FROM error_log el ORDER BY el.error_detail DESC;
+-- SELECT * FROM error_log_trace elt ORDER BY elt.trace_date DESC;
 CALL sp_error_log_readlist(0, 10, NULL, NULL);
 
 -- TRUNCATE error_log_trace;
