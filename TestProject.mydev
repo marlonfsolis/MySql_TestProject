@@ -9,6 +9,7 @@
     <Folder Name="Triggers" />
     <Folder Name="Views" />
     <File RelPath="Procedures" Link=".\Procedures\sp_error_log_readlist.sql" />
+    <File RelPath="Procedures" Link=".\Procedures\sp_error_log_truncate.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_groups_read.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_groups_readlist.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error.sql" />
@@ -52,6 +53,7 @@
         <File RelPath="Procedures" Name="sp_groups_readlist.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_groups_read.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_error_log_readlist.sql" BuildAction="Build" />
+        <File RelPath="Procedures" Name="sp_error_log_truncate.sql" BuildAction="Build" />
         <File RelPath="" Name="PostDeployment.sql" BuildAction="Build" />
       </Build>
     </Configuration>

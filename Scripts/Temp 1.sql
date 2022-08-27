@@ -231,3 +231,4 @@ CALL sp_error_log_readlist(0, 10, NULL, NULL);
 
 -- TRUNCATE error_log_trace;
 -- DELETE FROM error_log;
+CALL sp_error_log_truncate();

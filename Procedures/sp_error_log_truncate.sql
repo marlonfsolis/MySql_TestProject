@@ -17,7 +17,7 @@ BEGIN
   -- Drop foreign key
   --
   ALTER TABLE error_log_trace
-    DROP CONSTRAINT FK_error_log_trace_IndexName_IndexColName;
+    DROP CONSTRAINT FK_ErrorLogTrace_ErrorLog_ErrorLogid;
 
 
   --
