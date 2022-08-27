@@ -64,6 +64,27 @@ BEGIN
 
 
 
+  --
+  -- validate input value
+  --
+  IF IFNULL(permission_name,'')='' THEN
+    SIGNAL SQLSTATE '12345'
+      SET MESSAGE_TEXT = 'The field permission_name is required.'; 
+
+  END IF;
+  
+  IF NOT EXISTS (
+    SELECT 1 FROM permissions p WHERE p.name = permission_name
+  ) THEN
+    SIGNAL SQLSTATE '12345'
+      SET MESSAGE_TEXT = 'The permission was not found.';
+          
+  END IF;
+  
+
+  INSERT INTO log_message VALUES ('validate input values done', NOW());
+
+
 
   -- 
   -- get final result
