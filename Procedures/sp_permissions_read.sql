@@ -12,84 +12,89 @@ CREATE PROCEDURE sp_permissions_read
   IN permission_name varchar(100),
   OUT result json
 ) 
+Proc_Exit:
 BEGIN
 
   --
-  -- variables
+  -- Variables
   --
   DECLARE procedure_name varchar(100) DEFAULT 'sp_permissions_read';
   DECLARE error_msg varchar(1000) DEFAULT '';
   DECLARE error_log_id int DEFAULT 0;
   DECLARE p_count int DEFAULT 0;
+  DECLARE log_msg json DEFAULT JSON_ARRAY();
 
 
   --
-  -- error handling declarations
+  -- Error handling declarations
   --
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
   BEGIN
 
-    CALL sp_handle_error(procedure_name, result);
-    SELECT result;
+    -- Get error info
+    GET CURRENT DIAGNOSTICS CONDITION 1
+      @sqlstate = RETURNED_SQLSTATE, 
+      @errno = MYSQL_ERRNO,
+      @text = MESSAGE_TEXT;
+
+    CALL sp_handle_error_diagnostic(@sqlstate, @errno, @text, log_msg, procedure_name, result);
+
   END;
+  
 
 
   --
-  -- temp tables
+  -- Temp tables
   --
-  DROP TABLE IF EXISTS log_message CASCADE;
-  CREATE TEMPORARY TABLE log_message (
-    log_msg varchar(5000),
-    log_date datetime
-  );
-
-  DROP TABLE IF EXISTS response;
-  CREATE TEMPORARY TABLE response 
+  DROP TABLE IF EXISTS response___sp_permissions_read;
+  CREATE TEMPORARY TABLE response___sp_permissions_read 
     SELECT * FROM permissions p LIMIT 0;
 
 
 
   --
-  -- log the parameter values passed
+  -- Log the parameter values passed
   --
-	INSERT INTO log_message VALUES ('ParameterList:', NOW());
-	INSERT INTO log_message VALUES (CONCAT('permission_name: ', IFNULL(CAST(permission_name AS CHAR), 'NULL')), NOW());
+
+  SELECT fn_add_log_message(log_msg, 'ParameterList:') INTO log_msg;
+  SELECT fn_add_log_message(log_msg, CONCAT('permission_name: ', IFNULL(CAST(permission_name AS CHAR), 'NULL'))) INTO log_msg;
 
 
 
   --
-  -- default values
+  -- Default values
   --
   SET result = JSON_OBJECT('success', TRUE, 'msg', '', 'errorLogId', 0, 'recordCount', 0);
 
 
 
   --
-  -- validate input value
+  -- Validate input value
   --
   IF IFNULL(permission_name,'')='' THEN
-    SIGNAL SQLSTATE '12345'
-      SET MESSAGE_TEXT = 'The field permission_name is required.'; 
+
+      CALL sp_handle_error_proc('The field permission_name is required.', log_msg, procedure_name, result);
+      LEAVE Proc_Exit;
 
   END IF;
   
   IF NOT EXISTS (
     SELECT 1 FROM permissions p WHERE p.name = permission_name
   ) THEN
-    SIGNAL SQLSTATE '12345'
-      SET MESSAGE_TEXT = 'The permission was not found.';
+
+    CALL sp_handle_error_proc('The permission was not found.', log_msg, procedure_name, result);
+    LEAVE Proc_Exit;
           
   END IF;
   
-
-  INSERT INTO log_message VALUES ('validate input values done', NOW());
+  SELECT fn_add_log_message(log_msg, 'Validate input values done') INTO log_msg;
 
 
 
   -- 
-  -- get final result
+  -- Get final result
   --
-  INSERT INTO response (name, description)
+  INSERT INTO response___sp_permissions_read (name, description)
   SELECT
     p.name,
     p.description
@@ -97,20 +102,24 @@ BEGIN
   WHERE p.name = permission_name;
 
 
-  INSERT INTO log_message VALUES ('get final result done', NOW());
+  SELECT fn_add_log_message(log_msg, 'Get final result done') INTO log_msg;
 
   
-  SELECT COUNT(*) FROM response r INTO p_count;
+  SELECT COUNT(*) FROM response___sp_permissions_read r INTO p_count;
   SELECT JSON_SET(result, '$.recordCount', p_count) INTO result;
 
 
+  SELECT fn_add_log_message(log_msg, 'Record count done') INTO log_msg;
+
+
+
   --  
-  -- send the response
+  -- Send the response
   --
   SELECT
     r.name,
     r.description
-  FROM response r;
+  FROM response___sp_permissions_read r;
 
 
 END

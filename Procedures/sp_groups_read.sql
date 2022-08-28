@@ -16,7 +16,7 @@ CREATE PROCEDURE sp_groups_read
 BEGIN
 
   --
-  -- variables
+  -- Variables
   --
   DECLARE procedure_name varchar(100) DEFAULT 'sp_groups_read';
   DECLARE error_msg varchar(1000) DEFAULT '';
@@ -26,7 +26,7 @@ BEGIN
 
 
   --
-  -- error handling declarations
+  -- Error handling declarations
   --
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
   BEGIN
@@ -38,7 +38,7 @@ BEGIN
 
 
   --
-  -- temp tables
+  -- Temp tables
   --
   DROP TABLE IF EXISTS log_message CASCADE;
   CREATE TEMPORARY TABLE log_message (
@@ -53,21 +53,21 @@ BEGIN
 
 
   --
-  -- log the parameter values passed
+  -- Log the parameter values passed
   --
 	INSERT INTO log_message VALUES ('ParameterList:', NOW());
 	INSERT INTO log_message VALUES (CONCAT('group_name: ', IFNULL(CAST(group_name AS CHAR), 'NULL')), NOW());
 
 
   --
-  -- default values
+  -- Default values
   --
   SET result = JSON_OBJECT('success', TRUE, 'msg', '', 'errorLogId', 0, 'recordCount', 0);
 
 
 
   --
-  -- validate input value
+  -- Validate input value
   --
   IF IFNULL(group_name,'')='' THEN
     SIGNAL SQLSTATE '12345'

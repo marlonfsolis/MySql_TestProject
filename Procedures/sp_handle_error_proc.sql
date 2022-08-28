@@ -3,17 +3,16 @@
 -- Will log the error on error tables.
 -- and send the result json back to the routin
 --
--- CALL sp_handle_error('My error', 'Details', 'Stack Trace', 'procedure_name', @result);
+-- CALL sp_handle_error_proc('My error', '[]', 'sp_myproc', @result);
 -- SELECT @result;
 -- 
 
-DROP PROCEDURE IF EXISTS sp_handle_error;
+DROP PROCEDURE IF EXISTS sp_handle_error_proc;
 DELIMITER $$
-CREATE PROCEDURE sp_handle_error 
+CREATE PROCEDURE sp_handle_error_proc 
 (
   IN error_msg text,
-  IN error_detail text,
-  IN stack_trace text,
+  IN log_msg json,
   IN procedure_name varchar(100),
   INOUT result json
 ) 
@@ -22,7 +21,6 @@ BEGIN
   --
   -- Variables
   --
-  DECLARE error_detail longtext DEFAULT NULL;
   DECLARE error_logid int DEFAULT 0;
 
 
@@ -50,22 +48,21 @@ BEGIN
   -- Log the error
   --
 	INSERT INTO error_log (error_message, error_detail, stack_trace, error_date)
-		VALUES (error_msg, error_detail, stack_trace, NOW());
+		VALUES (error_msg, NULL, NULL, NOW());
 
   SELECT LAST_INSERT_ID()
     INTO error_logid;
 
 
-  CALL sys.table_exists('AppTemplateDb', 'log_message', @table_type);
-  IF @table_type != '' THEN
     INSERT INTO error_log_trace (error_logid, trace_message, trace_date)
-      SELECT 
-        error_logid,
-        lm.log_msg,
-        lm.log_date
-      FROM log_message lm;    
-
-  END IF;
+    SELECT 
+      error_logid AS 'error_logid',
+      jt.msg AS 'trace_message',
+      IFNULL(jt.date,NOW()) AS 'trace_date'
+    FROM JSON_TABLE(log_msg, '$[*]' COLUMNS(
+      msg text PATH '$.msg',
+      date datetime PATH '$.date'
+    )) jt;  
 
   
 

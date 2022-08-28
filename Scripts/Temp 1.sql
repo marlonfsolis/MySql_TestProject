@@ -5,6 +5,7 @@
 -- SELECT * FROM groups_roles gr;
 -- SELECT * FROM permissions_groups pg;
 
+
 --
 -- FOUND_ROWS() - Row Number returned by last select statement
 -- Do not use it. Wil be deprecated
@@ -141,6 +142,11 @@
 -- SELECT * FROM my_temp_tbl mtt;
 
 
+
+--
+-- JSON playing
+--
+
 -- set @myjson = NULL;
 -- -- Assing a json to a var. What var get is a string. Vars cannot be of type json.
 -- -- set @myjson = JSON_INSERT('{}', '$.name', TRUE);
@@ -162,6 +168,21 @@
 
 -- SELECT JSON_VALID(IFNULL(NULL, ''));
 -- set @isjson = JSON_VALID(IFNULL(NULL, ''));
+
+
+-- SET @log_msg = '[]';
+-- SET @log_msg = JSON_ARRAY();
+-- SELECT JSON_MERGE_PRESERVE(@log_msg, '{"name":"Marlon"}') INTO @log_msg;
+-- SELECT JSON_MERGE_PRESERVE(@log_msg, '{"name":"Yenni"}') INTO @log_msg;
+-- -- SELECT @log_msg;
+-- -- SELECT JSON_LENGTH(@log_msg);
+-- -- -- Can specify the default value ON EMPTY (PATH not found) and ON ERROR (Path parse error)
+-- SELECT * 
+-- FROM JSON_TABLE(@log_msg, '$[*]' COLUMNS(
+--     rowid FOR ORDINALITY,
+--     name text PATH '$.name'
+--     ) 
+--   ) AS jt;
 
 
 --
@@ -208,10 +229,14 @@
 -- SELECT @result;
 
 
--- CALL sp_permissions_read('Permission1', @result);
--- SELECT @result;
+CALL sp_permissions_read('Permission1', @result);
+SELECT @result;
 
--- CALL sp_permissions_write('{"name":"Permission4", "description":"Permission 4"}', @Out_Param);
+CALL sp_error_log_readlist(0, 10, NULL, NULL);
+-- CALL sp_error_log_truncate();
+
+-- 
+-- CALL sp_permissions_write('{"name":"Permission4", "description":"Permission 4"}', TRUE, @Out_Param);
 -- SELECT @Out_Param;
 
 
@@ -219,16 +244,27 @@
 -- SELECT @result;
 
 
-CALL sp_groups_read('Group11', @result);
-SELECT @result;
+-- CALL sp_groups_read('Group11', @result);
+-- SELECT @result;
 
 
 
 
 -- SELECT * FROM error_log el ORDER BY el.error_detail DESC;
 -- SELECT * FROM error_log_trace elt ORDER BY elt.trace_date DESC;
-CALL sp_error_log_readlist(0, 10, NULL, NULL);
+-- CALL sp_error_log_readlist(0, 10, NULL, NULL);
+-- CALL sp_error_log_truncate();
 
--- TRUNCATE error_log_trace;
--- DELETE FROM error_log;
-CALL sp_error_log_truncate();
+
+-- CALL sp_tran_test(TRUE);
+-- 
+-- CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
+-- CALL sp_groups_readlist(0, 0, NULL, NULL, @result);
+-- 
+-- CALL sp_permissions_delete('Permission4', @Out_Param);
+-- DELETE FROM groups_roles WHERE name = 'Group4';
+
+
+-- SET AUTOCOMMIT = 1;
+-- SET AUTOCOMMIT = 0;
+
