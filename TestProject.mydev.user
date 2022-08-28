@@ -4,7 +4,7 @@
 <Options Version="3.0">
   <Documents>
     <Document Moniker=".\Scripts\Temp 1.sql" ActiveView="Data" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
-    <Document Moniker=".\Procedures\sp_permissions_read.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" Active="True" />
+    <Document Moniker=".\Procedures\sp_permissions_read.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
     <Document Moniker=".\Procedures\sp_handle_error.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
     <Document Moniker=".\Procedures\sp_handle_error_diagnostic.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
     <Document Moniker=".\Procedures\sp_handle_error_proc.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />

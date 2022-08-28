@@ -20,6 +20,7 @@
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_write.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error_proc.sql" />
     <File RelPath="Scripts" Link=".\Scripts\Temp 1.sql" />
+    <File RelPath="Scripts" Link=".\Scripts\Temp 2.sql" />
     <File RelPath="Tables" Link=".\Tables\error_log.sql" />
     <File RelPath="Tables" Link=".\Tables\error_log_trace.sql" />
     <File RelPath="Tables" Link=".\Tables\flyway_schema_history.Tables.sql" />
@@ -59,6 +60,7 @@
         <File RelPath="Procedures" Name="sp_handle_error_diagnostic.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_handle_error_proc.sql" BuildAction="Build" />
         <File RelPath="Functions" Name="fn_add_log_message.sql" BuildAction="Build" />
+        <File RelPath="Scripts" Name="Temp 2.sql" BuildAction="Build" />
         <File RelPath="" Name="PostDeployment.sql" BuildAction="Build" />
       </Build>
     </Configuration>
