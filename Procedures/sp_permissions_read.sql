@@ -40,6 +40,7 @@ BEGIN
     CALL sp_handle_error_diagnostic(@sqlstate, @errno, @text, log_msg, procedure_name, result);
 
   END;
+  SET AUTOCOMMIT = 0;
   
 
 

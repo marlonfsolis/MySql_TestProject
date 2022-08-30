@@ -14,6 +14,7 @@ CREATE PROCEDURE sp_permissions_write
   IN auto_commit bool,
   OUT result json
 ) 
+Proc_Exit:
 BEGIN
 
   --
@@ -23,6 +24,7 @@ BEGIN
   DECLARE error_msg varchar(1000) DEFAULT '';
   DECLARE error_log_id int DEFAULT 0;
   DECLARE p_count int DEFAULT 0;
+  DECLARE log_msg json DEFAULT JSON_ARRAY();
 
   -- Fields
   DECLARE name varchar(100);
@@ -35,24 +37,27 @@ BEGIN
   --
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
   BEGIN
-    CALL sp_handle_error(procedure_name, result);
+
+    -- Get error info
+    GET CURRENT DIAGNOSTICS CONDITION 1
+      @sqlstate = RETURNED_SQLSTATE, 
+      @errno = MYSQL_ERRNO,
+      @text = MESSAGE_TEXT;
+
+    CALL sp_handle_error_diagnostic(@sqlstate, @errno, @text, log_msg, procedure_name, result);
     
     IF auto_commit THEN
       ROLLBACK;
     END IF;
 
   END;
+  SET AUTOCOMMIT = 0;
 
 
+   
   --
   -- Temp tables
   --
-  DROP TABLE IF EXISTS log_message CASCADE;
-  CREATE TEMPORARY TABLE log_message (
-    log_msg varchar(5000),
-    log_date datetime
-  );
-
   DROP TABLE IF EXISTS response___sp_permissions_write;
   CREATE TEMPORARY TABLE response___sp_permissions_write 
     SELECT * FROM permissions p LIMIT 0;
@@ -62,8 +67,8 @@ BEGIN
   --
   -- Log the parameter values passed
   --
-	INSERT INTO log_message VALUES ('ParameterList:', NOW());
-	INSERT INTO log_message VALUES (CONCAT('p_json: ', IFNULL(p_json, 'NULL')), NOW());
+  SELECT fn_add_log_message(log_msg, 'ParameterList:') INTO log_msg;
+  SELECT fn_add_log_message(log_msg, CONCAT('p_json: ', IFNULL(p_json, 'NULL'))) INTO log_msg;
 
 
 
@@ -79,9 +84,10 @@ BEGIN
   -- Validate json input
   --
   IF JSON_VALID(p_json) = 0 THEN
-    SIGNAL SQLSTATE '12345'
-      SET MESSAGE_TEXT = 'The json input is not valid.'; 
+    CALL sp_handle_error_proc('The json input is not valid.', log_msg, procedure_name, result);
+    LEAVE Proc_Exit;
   END IF;
+
 
 
   --
@@ -90,17 +96,19 @@ BEGIN
   SELECT
     JSON_VALUE (p_json, '$.name'),
     JSON_VALUE (p_json, '$.description') 
-  INTO name, description;
+  INTO name, 
+      description;
   
-  INSERT INTO log_message VALUES ('get json values done', NOW());
+  SELECT fn_add_log_message(log_msg, 'Get json values done') INTO log_msg;
+
 
 
   --
   -- Validate json values
   --
   IF IFNULL(name,'')='' THEN
-    SIGNAL SQLSTATE '12345'
-      SET MESSAGE_TEXT = 'The field name is required.'; 
+    CALL sp_handle_error_proc('The field name is required.', log_msg, procedure_name, result);
+    LEAVE Proc_Exit;
 
   END IF;
 
@@ -110,13 +118,12 @@ BEGIN
     WHERE p.name = name
   ) 
   THEN
-    SIGNAL SQLSTATE '12345'
-      SET MESSAGE_TEXT = 'The permission name already exist.';
-     
+    CALL sp_handle_error_proc('The permission name already exist.', log_msg, procedure_name, result);
+    LEAVE Proc_Exit;
+
   END IF;
   
-
-  INSERT INTO log_message VALUES ('validate json values done', NOW());
+  SELECT fn_add_log_message(log_msg, 'Validate json values done') INTO log_msg;
 
 
 
@@ -126,6 +133,8 @@ BEGIN
   INSERT INTO permissions
     SET name = name,
         description = description;
+
+
 
   -- 
   -- Get final result
@@ -137,8 +146,7 @@ BEGIN
   FROM permissions p
   WHERE p.name = name;
 
- 
-  INSERT INTO log_message VALUES ('get final result done', NOW());
+  SELECT fn_add_log_message(log_msg, 'Get final result done') INTO log_msg;
 
 
   

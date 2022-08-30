@@ -50,6 +50,7 @@ BEGIN
     CALL sp_handle_error_diagnostic(@sqlstate, @errno, @text, log_msg, procedure_name, result);
 
   END;
+  SET AUTOCOMMIT = 0;
 
 
   --
@@ -118,7 +119,7 @@ BEGIN
   INTO name_filter,
       description_filter;
 
-  SELECT fn_add_log_message(log_msg, 'Get search values done');
+  SELECT fn_add_log_message(log_msg, 'Get search values done') INTO log_msg;
 
 
 
@@ -139,13 +140,13 @@ BEGIN
   AND (name_search IS NULL OR name_search LIKE p.description)
   AND (description_search IS NULL OR description_search LIKE p.description);
   
-  SELECT fn_add_log_message(log_msg, 'Get final result done');
+  SELECT fn_add_log_message(log_msg, 'Get final result done') INTO log_msg;
 
   
   SELECT COUNT(*) FROM response___sp_permissions_readlist r INTO p_count;
   SELECT JSON_SET(result, '$.recordCount', p_count) INTO result;
 
-  SELECT fn_add_log_message(log_msg, 'Result count done');
+  SELECT fn_add_log_message(log_msg, 'Result count done') INTO log_msg;
 
 
   --  

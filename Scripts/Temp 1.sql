@@ -221,8 +221,8 @@
 -- Procedures calls
 --
 
--- CALL sp_permissions_delete('Permission3', @Out_Param);
--- SELECT @Out_Param;
+CALL sp_permissions_delete('Permission4', @Out_Param);
+SELECT @Out_Param;
 
 
 CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
@@ -232,12 +232,13 @@ SELECT @result;
 -- CALL sp_permissions_read('Permission1', @result);
 -- SELECT @result;
 
+
+CALL sp_permissions_write('{"name":"Permission3", "description":"Permission 3"}', TRUE, @Out_Param);
+SELECT @Out_Param;
+
+
 -- CALL sp_error_log_readlist(0, 10, NULL, NULL);
 -- CALL sp_error_log_truncate();
-
--- 
--- CALL sp_permissions_write('{"name":"Permission4", "description":"Permission 4"}', TRUE, @Out_Param);
--- SELECT @Out_Param;
 
 
 -- CALL sp_groups_readlist(0, 0, NULL, NULL, @result);
@@ -273,4 +274,11 @@ SELECT @result;
 
 -- SET AUTOCOMMIT = 1;
 -- SET AUTOCOMMIT = 0;
+-- SELECT @@autocommit;
+
+
+
+CALL sp_set_autocommit('OFF', @state_current);
+SELECT @@autocommit;
+
 
