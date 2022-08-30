@@ -221,7 +221,7 @@
 -- Procedures calls
 --
 
-CALL sp_permissions_delete('Permission4', @Out_Param);
+CALL sp_permissions_delete('Permission4', TRUE, @Out_Param);
 SELECT @Out_Param;
 
 
@@ -233,7 +233,7 @@ SELECT @result;
 -- SELECT @result;
 
 
-CALL sp_permissions_write('{"name":"Permission3", "description":"Permission 3"}', TRUE, @Out_Param);
+CALL sp_permissions_write('{"name":"Permission4", "description":"Permission 4"}', TRUE, @Out_Param);
 SELECT @Out_Param;
 
 
@@ -277,8 +277,5 @@ SELECT @Out_Param;
 -- SELECT @@autocommit;
 
 
-
-CALL sp_set_autocommit('OFF', @state_current);
-SELECT @@autocommit;
 
 

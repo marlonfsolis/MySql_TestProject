@@ -2,7 +2,7 @@
 -- Created on: 8/24/2022 
 -- Description: Delete one permission by name.
 --
--- CALL sp_permissions_delete('{"name":"Permission1", "description":"Permission 1"}', @Out_Param);
+-- CALL sp_permissions_delete('{"name":"Permission1", "description":"Permission 1"}', TRUE, @Out_Param);
 -- SELECT @Out_Param;
 -- 
 
@@ -11,97 +11,103 @@ DELIMITER $$
 CREATE PROCEDURE sp_permissions_delete
 (
   IN name varchar(100),
+  IN auto_commit bool,
   OUT result json
-) 
+)
+Proc_Exit: 
 BEGIN
 
   --
-  -- variables
+  -- Variables
   --
   DECLARE procedure_name varchar(100) DEFAULT 'sp_permissions_delete';
   DECLARE error_msg varchar(1000) DEFAULT '';
   DECLARE error_log_id int DEFAULT 0;
   DECLARE p_count int DEFAULT 0;
+  DECLARE log_msg json DEFAULT JSON_ARRAY();
 
 
   --
-  -- error handling declarations
+  -- Error handling declarations
   --
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
   BEGIN
-    CALL sp_handle_error(procedure_name, result);
+
+    -- Get error info
+    GET CURRENT DIAGNOSTICS CONDITION 1
+      @sqlstate = RETURNED_SQLSTATE, 
+      @errno = MYSQL_ERRNO,
+      @text = MESSAGE_TEXT;
+    
+    CALL sp_handle_error_diagnostic(@sqlstate, @errno, @text, log_msg, procedure_name, result);
 
   END;
+  SET AUTOCOMMIT = 0;
+
 
 
   --
-  -- temp tables
+  -- Temp tables
   --
-  DROP TABLE IF EXISTS log_message CASCADE;
-  CREATE TEMPORARY TABLE log_message (
-    log_msg varchar(5000),
-    log_date datetime
-  );
-
-  DROP TABLE IF EXISTS response;
-  CREATE TEMPORARY TABLE response 
+  DROP TABLE IF EXISTS response___sp_permissions_delete;
+  CREATE TEMPORARY TABLE response___sp_permissions_delete 
     SELECT * FROM permissions LIMIT 0;
 
 
 
   --
-  -- log the parameter values passed
+  -- Log the parameter values passed
   --
-	INSERT INTO log_message VALUES ('ParameterList:', NOW());
-	INSERT INTO log_message VALUES (CONCAT('name: ', IFNULL(name, 'NULL')), NOW());
+  SELECT fn_add_log_message(log_msg, 'ParameterList:') INTO log_msg;
+  SELECT fn_add_log_message(log_msg, CONCAT('name: ', IFNULL(name, 'NULL'))) INTO log_msg;
 
 
 
   --
-  -- default values
+  -- Default values
   --
   SET result = JSON_OBJECT('success', TRUE, 'msg', '', 'errorLogId', 0, 'recordCount', 0);
    
 
 
   --
-  -- validate input value
+  -- Validate input value
   --
   IF IFNULL(name,'')='' THEN
-    SIGNAL SQLSTATE '12345'
-      SET MESSAGE_TEXT = 'The field name is required.'; 
+    CALL sp_handle_error_proc('The field name is required.', log_msg, procedure_name, result);
+    LEAVE Proc_Exit;
 
   END IF;
   
   IF NOT EXISTS (
     SELECT 1 FROM permissions p WHERE p.name = name
   ) THEN
-    SIGNAL SQLSTATE '12345'
-      SET MESSAGE_TEXT = 'The permission was not found.';
+    CALL sp_handle_error_proc('The permission was not found.', log_msg, procedure_name, result);
+    LEAVE Proc_Exit;
           
   END IF;
   
 
-  INSERT INTO log_message VALUES ('validate input values done', NOW());
+  SELECT fn_add_log_message(log_msg, 'Validate input values done') INTO log_msg;
 
 
 
   -- 
-  -- get record to be deleted
+  -- Get record to be deleted
   --
-  INSERT INTO response (name, description)
+  INSERT INTO response___sp_permissions_delete (name, description)
   SELECT
     name,
     description
   FROM permissions p
   WHERE p.name = name;
 
-  INSERT INTO log_message VALUES ('Old values save done', NOW());
+  SELECT fn_add_log_message(log_msg, 'Old values save done') INTO log_msg;
 
 
 
   --
-  -- delete permission association to groups first
+  -- Delete permission association to groups first
   --
   DELETE
     FROM permissions_groups pg
@@ -109,28 +115,27 @@ BEGIN
 
 
   -- 
-  -- then delete permission
+  -- Then delete permission
   --
   DELETE
     FROM permissions p
     WHERE p.name = name;
 
- 
-  INSERT INTO log_message VALUES ('delete record done', NOW());
+  SELECT fn_add_log_message(log_msg, 'Delete record done') INTO log_msg;
 
 
   
-  SELECT COUNT(*) FROM response r INTO p_count;
+  SELECT COUNT(*) FROM response___sp_permissions_delete r INTO p_count;
   SELECT JSON_SET(result, '$.recordCount', p_count) INTO result;
 
 
   --  
-  -- send the response
+  -- Send the response
   --
   SELECT
     r.name,
     r.description
-  FROM response r;
+  FROM response___sp_permissions_delete r;
 
 
 END
