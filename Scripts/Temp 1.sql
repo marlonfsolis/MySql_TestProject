@@ -225,14 +225,14 @@
 -- SELECT @Out_Param;
 
 
--- CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
--- SELECT @result;
-
-
-CALL sp_permissions_read('Permission1', @result);
+CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
 SELECT @result;
 
-CALL sp_error_log_readlist(0, 10, NULL, NULL);
+
+-- CALL sp_permissions_read('Permission1', @result);
+-- SELECT @result;
+
+-- CALL sp_error_log_readlist(0, 10, NULL, NULL);
 -- CALL sp_error_log_truncate();
 
 -- 
@@ -256,7 +256,13 @@ CALL sp_error_log_readlist(0, 10, NULL, NULL);
 -- CALL sp_error_log_truncate();
 
 
+--
+-- Proc testing calls
+--
 -- CALL sp_tran_test(TRUE);
+-- CALL sp_temptable_test_1();
+
+
 -- 
 -- CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
 -- CALL sp_groups_readlist(0, 0, NULL, NULL, @result);

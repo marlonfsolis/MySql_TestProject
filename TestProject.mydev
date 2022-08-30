@@ -14,11 +14,11 @@
     <File RelPath="Procedures" Link=".\Procedures\sp_groups_readlist.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error_diagnostic.sql" />
+    <File RelPath="Procedures" Link=".\Procedures\sp_handle_error_proc.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_delete.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_read.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_readlist.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_write.sql" />
-    <File RelPath="Procedures" Link=".\Procedures\sp_handle_error_proc.sql" />
     <File RelPath="Scripts" Link=".\Scripts\Temp 1.sql" />
     <File RelPath="Scripts" Link=".\Scripts\Temp 2.sql" />
     <File RelPath="Tables" Link=".\Tables\error_log.sql" />

@@ -19,12 +19,13 @@ CREATE PROCEDURE sp_permissions_readlist
 BEGIN
 
   --
-  -- variables
+  -- Variables
   --
-  DECLARE procedure_name varchar(100) DEFAULT 'sp_permissions_read';
+  DECLARE procedure_name varchar(100) DEFAULT 'sp_permissions_readlist';
   DECLARE error_msg varchar(1000) DEFAULT '';
   DECLARE error_log_id int DEFAULT 0;
   DECLARE p_count int DEFAULT 0;
+  DECLARE log_msg json DEFAULT JSON_ARRAY();
 
   -- filters
   DECLARE name_filter varchar(100);
@@ -35,53 +36,54 @@ BEGIN
 
 
   --
-  -- error handling declarations
+  -- Error handling declarations
   --
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
   BEGIN
 
-    CALL sp_handle_error(procedure_name, result);
-    SELECT result;
+    -- Get error info
+    GET CURRENT DIAGNOSTICS CONDITION 1
+      @sqlstate = RETURNED_SQLSTATE, 
+      @errno = MYSQL_ERRNO,
+      @text = MESSAGE_TEXT;
+
+    CALL sp_handle_error_diagnostic(@sqlstate, @errno, @text, log_msg, procedure_name, result);
+
   END;
 
 
   --
-  -- temp tables
+  -- Temp tables
   --
-  DROP TABLE IF EXISTS log_message CASCADE;
-  CREATE TEMPORARY TABLE log_message (
-    log_msg varchar(5000),
-    log_date datetime
-  );
-
-  DROP TABLE IF EXISTS response;
-  CREATE TEMPORARY TABLE response 
+  DROP TABLE IF EXISTS response___sp_permissions_readlist;
+  CREATE TEMPORARY TABLE response___sp_permissions_readlist 
     SELECT * FROM permissions p LIMIT 0;
 
 
 
   --
-  -- log the parameter values passed
+  -- Log the parameter values passed
   --
-	INSERT INTO log_message VALUES ('ParameterList:', NOW());
-	INSERT INTO log_message VALUES (CONCAT('offsetRows: ', IFNULL(CAST(offsetRows AS CHAR), 'NULL')), NOW());
-	INSERT INTO log_message VALUES (CONCAT('fetchRows: ', IFNULL(CAST(fetchRows AS char(20)), 'NULL')), NOW());
-	INSERT INTO log_message VALUES (CONCAT('filterJson: ', IFNULL(filterJson, 'NULL')), NOW());
-	INSERT INTO log_message VALUES (CONCAT('searchJson: ', IFNULL(CAST(searchJson AS char), 'NULL')), NOW());
-	INSERT INTO log_message VALUES (CONCAT('ProfileId: ', IFNULL(CAST(0 AS char), 'NULL')), NOW());
+	SELECT fn_add_log_message(log_msg, 'ParameterList:') INTO log_msg;
+  SELECT fn_add_log_message(log_msg, CONCAT('offsetRows: ', IFNULL(CAST(offsetRows AS CHAR), 'NULL'))) INTO log_msg;
+  SELECT fn_add_log_message(log_msg, CONCAT('fetchRows: ', IFNULL(CAST(fetchRows AS char(20)), 'NULL'))) INTO log_msg;
+  SELECT fn_add_log_message(log_msg, CONCAT('filterJson: ', IFNULL(filterJson, 'NULL'))) INTO log_msg;
+  SELECT fn_add_log_message(log_msg, CONCAT('searchJson: ', IFNULL(CAST(searchJson AS char), 'NULL'))) INTO log_msg;
+  SELECT fn_add_log_message(log_msg, CONCAT('ProfileId: ', IFNULL(CAST(0 AS char), 'NULL'))) INTO log_msg;
 
 
+
   --
-  -- default values
+  -- Default values
   --
   SET offsetRows = IFNULL(offsetRows, 0);
   SET fetchRows = IFNULL(fetchRows, 10);
   SET result = JSON_OBJECT('success', TRUE, 'msg', '', 'errorLogId', 0, 'recordCount', 0);
   
   IF fetchRows = 0 THEN
-  SELECT
-    COUNT(1) INTO fetchRows
-  FROM permissions p;
+    SELECT
+      COUNT(1) INTO fetchRows
+    FROM permissions p;
   END IF;  
   IF JSON_VALID(filterJson) = 0 THEN
     SET filterJson = '{}';
@@ -90,37 +92,40 @@ BEGIN
     SET searchJson = '{}';
   END IF;
 
+  SELECT fn_add_log_message(log_msg, 'Default values done') INTO log_msg;
+
 
 
   --
-  -- get filter values
+  -- Get filter values
   --
   SELECT
     JSON_VALUE (filterJson, '$.name'),
     JSON_VALUE (filterJson, '$.description') 
   INTO name_filter,
-    description_filter
-  ;
-  INSERT INTO log_message VALUES ('get filter values done', NOW());
+      description_filter;
+  
+  SELECT fn_add_log_message(log_msg, 'Get filter values done') INTO log_msg;
+
 
 
   --
-  -- get search values
+  -- Get search values
   --
   SELECT
     JSON_VALUE (searchJson, '$.name'),
     JSON_VALUE (searchJson, '$.description') 
   INTO name_filter,
-    description_filter
-  ;
-  INSERT INTO log_message VALUES ('get search values done', NOW());
+      description_filter;
+
+  SELECT fn_add_log_message(log_msg, 'Get search values done');
 
 
 
   -- 
-  -- get final result
+  -- Get final result
   --
-  INSERT INTO response (name, description)
+  INSERT INTO response___sp_permissions_readlist (name, description)
   SELECT
     p.name,
     p.description
@@ -132,25 +137,26 @@ BEGIN
 
   -- search
   AND (name_search IS NULL OR name_search LIKE p.description)
-  AND (description_search IS NULL OR description_search LIKE p.description)
-  ;
-  INSERT INTO log_message VALUES ('get final result done', NOW());
+  AND (description_search IS NULL OR description_search LIKE p.description);
+  
+  SELECT fn_add_log_message(log_msg, 'Get final result done');
 
   
-  SELECT COUNT(*) FROM response r INTO p_count;
+  SELECT COUNT(*) FROM response___sp_permissions_readlist r INTO p_count;
   SELECT JSON_SET(result, '$.recordCount', p_count) INTO result;
+
+  SELECT fn_add_log_message(log_msg, 'Result count done');
 
 
   --  
-  -- send the response
+  -- Send the response
   --
   SELECT
     r.name,
     r.description
-  FROM response r;
+  FROM response___sp_permissions_readlist r;
 
 
 END
 $$
-
 DELIMITER ;
