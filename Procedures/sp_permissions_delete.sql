@@ -41,7 +41,13 @@ BEGIN
     
     CALL sp_handle_error_diagnostic(@sqlstate, @errno, @text, log_msg, procedure_name, result);
 
+    IF auto_commit THEN
+      ROLLBACK;
+      SET AUTOCOMMIT = 1;
+    END IF;
+
   END;
+
   SET AUTOCOMMIT = 0;
 
 
@@ -75,6 +81,7 @@ BEGIN
   --
   IF IFNULL(name,'')='' THEN
     CALL sp_handle_error_proc('The field name is required.', log_msg, procedure_name, result);
+    SET AUTOCOMMIT = 1;
     LEAVE Proc_Exit;
 
   END IF;
@@ -83,6 +90,7 @@ BEGIN
     SELECT 1 FROM permissions p WHERE p.name = name
   ) THEN
     CALL sp_handle_error_proc('The permission was not found.', log_msg, procedure_name, result);
+    SET AUTOCOMMIT = 1;
     LEAVE Proc_Exit;
           
   END IF;
@@ -137,6 +145,12 @@ BEGIN
     r.description
   FROM response___sp_permissions_delete r;
 
+
+
+  IF auto_commit THEN
+    COMMIT;
+    SET AUTOCOMMIT = 1;
+  END IF;
 
 END
 $$

@@ -50,13 +50,11 @@ BEGIN
     CALL sp_handle_error_diagnostic(@sqlstate, @errno, @text, log_msg, procedure_name, result);
 
   END;
-  SET AUTOCOMMIT = 0;
-
 
   --
   -- Temp tables
   --
-  DROP TABLE IF EXISTS response___sp_permissions_readlist;
+  DROP TEMPORARY TABLE IF EXISTS response___sp_permissions_readlist;
   CREATE TEMPORARY TABLE response___sp_permissions_readlist 
     SELECT * FROM permissions p LIMIT 0;
 

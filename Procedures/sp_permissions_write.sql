@@ -108,6 +108,7 @@ BEGIN
   --
   IF IFNULL(name,'')='' THEN
     CALL sp_handle_error_proc('The field name is required.', log_msg, procedure_name, result);
+    ROLLBACK;
     LEAVE Proc_Exit;
 
   END IF;
@@ -119,6 +120,7 @@ BEGIN
   ) 
   THEN
     CALL sp_handle_error_proc('The permission name already exist.', log_msg, procedure_name, result);
+    ROLLBACK;
     LEAVE Proc_Exit;
 
   END IF;

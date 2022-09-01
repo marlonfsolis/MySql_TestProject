@@ -221,7 +221,7 @@
 -- Procedures calls
 --
 
-CALL sp_permissions_delete('Permission4', TRUE, @Out_Param);
+CALL sp_permissions_delete('Permission6', TRUE, @Out_Param);
 SELECT @Out_Param;
 
 
@@ -276,6 +276,17 @@ SELECT @Out_Param;
 -- SET AUTOCOMMIT = 0;
 -- SELECT @@autocommit;
 
+-- COMMIT;
+-- ROLLBACK;
 
 
+CALL sp_tran_test1(TRUE, @error_code);
 
+CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
+SELECT @result;
+
+CALL sp_permissions_delete('Permission6', TRUE, @Out_Param);
+SELECT @Out_Param;
+
+
+CALL run_test();
