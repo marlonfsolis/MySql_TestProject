@@ -13,8 +13,9 @@ BEGIN
 
   CALL sp_tran_test1(TRUE, error_code);
 
+  -- because we use SAVEPOINT. At this point we have BEEN ROLLED BACK already inside the proc
+  -- This have the advantage that we can rollback only the proc with error and continue doint stuff
   CALL sp_permissions_readlist(0, 0, NULL, NULL, @result); -- use TEMPORARY key word to drop temp tables
---   CALL permissions_readlist();
 
   IF error_code > 0 THEN
     SELECT 'Rolloing back';
