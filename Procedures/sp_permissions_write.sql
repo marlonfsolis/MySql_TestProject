@@ -2,8 +2,8 @@
 -- Created on: 8/23/2022 
 -- Description: Create one permission.
 --
--- CALL sp_permissions_write('{"name":"Permission1", "description":"Permission 1"}', TRUE, @Out_Param);
--- SELECT @Out_Param;
+-- CALL sp_permissions_write('{"name":"Permission1", "description":"Permission 1"}', @result);
+-- SELECT @result;
 -- 
 
 DROP PROCEDURE IF EXISTS sp_permissions_write;
@@ -11,10 +11,8 @@ DELIMITER $$
 CREATE PROCEDURE sp_permissions_write
 (
   IN p_json json,
-  IN auto_commit bool,
   OUT result json
 ) 
-Proc_Exit:
 BEGIN
 
   --
@@ -23,8 +21,10 @@ BEGIN
   DECLARE procedure_name varchar(100) DEFAULT 'sp_permissions_write';
   DECLARE error_msg varchar(1000) DEFAULT '';
   DECLARE error_log_id int DEFAULT 0;
-  DECLARE p_count int DEFAULT 0;
-  DECLARE log_msg json DEFAULT JSON_ARRAY();
+  DECLARE v_count int DEFAULT 0;
+  DECLARE log_msgs json DEFAULT JSON_ARRAY();
+	DECLARE	within_tran	bool DEFAULT FALSE;
+	DECLARE	tran_started bool	DEFAULT	TRUE;
 
   -- Fields
   DECLARE name varchar(100);
@@ -37,28 +37,26 @@ BEGIN
   --
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
   BEGIN
-
     -- Get error info
     GET CURRENT DIAGNOSTICS CONDITION 1
       @sqlstate = RETURNED_SQLSTATE, 
       @errno = MYSQL_ERRNO,
       @text = MESSAGE_TEXT;
 
-    CALL sp_handle_error_diagnostic(@sqlstate, @errno, @text, log_msg, procedure_name, result);
-    
-    IF auto_commit THEN
-      ROLLBACK;
-    END IF;
+		IF tran_started	THEN
+			ROLLBACK;
+		ELSE
+			 ROLLBACK	TO SAVEPOINT sp_permissions_write;	
+		END	IF;
+
+		CALL sp_handle_error_diagnostic(@sqlstate, @errno, @text,	log_msgs,	procedure_name,	result);
 
   END;
-  SET AUTOCOMMIT = 0;
-
-
    
   --
   -- Temp tables
   --
-  DROP TABLE IF EXISTS response___sp_permissions_write;
+  DROP TEMPORARY TABLE IF EXISTS response___sp_permissions_write;
   CREATE TEMPORARY TABLE response___sp_permissions_write 
     SELECT * FROM permissions p LIMIT 0;
 
@@ -67,25 +65,37 @@ BEGIN
   --
   -- Log the parameter values passed
   --
-  SELECT fn_add_log_message(log_msg, 'ParameterList:') INTO log_msg;
-  SELECT fn_add_log_message(log_msg, CONCAT('p_json: ', IFNULL(p_json, 'NULL'))) INTO log_msg;
+  SELECT fn_add_log_message(log_msgs, 'ParameterList:') INTO log_msgs;
+  SELECT fn_add_log_message(log_msgs, CONCAT('p_json: ', IFNULL(p_json, 'NULL'))) INTO log_msgs;
 
 
 
   --
   -- Default values
   --
+  CALL sp_within_transaction(within_tran);
   SET result = JSON_OBJECT('success', TRUE, 'msg', '', 'errorLogId', 0, 'recordCount', 0);
-  SET auto_commit = IFNULL(auto_commit,TRUE);
    
+
+
+	--
+	-- Start Tran	or Savepoint
+	--
+	IF within_tran THEN
+		SAVEPOINT	sp_permissions_write;
+	ELSE 
+		START	TRANSACTION;
+		SET	tran_started = TRUE;
+	END	IF;
 
 
   --
   -- Validate json input
   --
   IF JSON_VALID(p_json) = 0 THEN
-    CALL sp_handle_error_proc('The json input is not valid.', log_msg, procedure_name, result);
-    LEAVE Proc_Exit;
+    SIGNAL SQLSTATE '12345'
+      SET MESSAGE_TEXT = 'The json input is not valid.';
+     
   END IF;
 
 
@@ -99,7 +109,7 @@ BEGIN
   INTO name, 
       description;
   
-  SELECT fn_add_log_message(log_msg, 'Get json values done') INTO log_msg;
+  SELECT fn_add_log_message(log_msgs, 'Get json values done') INTO log_msgs;
 
 
 
@@ -107,10 +117,9 @@ BEGIN
   -- Validate json values
   --
   IF IFNULL(name,'')='' THEN
-    CALL sp_handle_error_proc('The field name is required.', log_msg, procedure_name, result);
-    ROLLBACK;
-    LEAVE Proc_Exit;
-
+    SIGNAL SQLSTATE '12345'
+      SET MESSAGE_TEXT = 'The field name is required.';
+     
   END IF;
 
   IF EXISTS (
@@ -119,13 +128,12 @@ BEGIN
     WHERE p.name = name
   ) 
   THEN
-    CALL sp_handle_error_proc('The permission name already exist.', log_msg, procedure_name, result);
-    ROLLBACK;
-    LEAVE Proc_Exit;
-
+    SIGNAL SQLSTATE '12345'
+      SET MESSAGE_TEXT = 'The permission name already exist.';
+     
   END IF;
   
-  SELECT fn_add_log_message(log_msg, 'Validate json values done') INTO log_msg;
+  SELECT fn_add_log_message(log_msgs, 'Validate json values done') INTO log_msgs;
 
 
 
@@ -148,12 +156,12 @@ BEGIN
   FROM permissions p
   WHERE p.name = name;
 
-  SELECT fn_add_log_message(log_msg, 'Get final result done') INTO log_msg;
+  SELECT fn_add_log_message(log_msgs, 'Get final result done') INTO log_msgs;
 
 
   
-  SELECT COUNT(*) FROM response___sp_permissions_write r INTO p_count;
-  SELECT JSON_SET(result, '$.recordCount', p_count) INTO result;
+  SELECT COUNT(*) FROM response___sp_permissions_write r INTO v_count;
+  SELECT JSON_SET(result, '$.recordCount', v_count) INTO result;
 
 
 
@@ -167,9 +175,10 @@ BEGIN
 
 
 
-  IF auto_commit THEN
-    COMMIT;
-  END IF;
+	-- Commit
+	IF tran_started	THEN
+		COMMIT;
+	END	IF;	
  
 END
 $$

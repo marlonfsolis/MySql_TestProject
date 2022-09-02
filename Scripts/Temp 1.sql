@@ -233,8 +233,8 @@ CALL sp_permissions_read('Permission1', @result);
 SELECT @result;
 
 
-CALL sp_permissions_write('{"name":"Permission4", "description":"Permission 4"}', TRUE, @Out_Param);
-SELECT @Out_Param;
+CALL sp_permissions_write('{"name":"Permission4", "description":"Permission 4"}', @result);
+SELECT @result;
 
 
 -- CALL sp_error_log_readlist(0, 10, NULL, NULL);
