@@ -2,8 +2,8 @@
 -- Created on: 8/26/2022 
 -- Description: Get group list
 --
--- CALL sp_groups_readlist(0, 10, '{"name":"Value"}', '{"description":"%"}', @Out_Param);
--- SELECT @Out_Param;
+-- CALL sp_groups_readlist(0, 10, '{"name":"Value"}', '{"description":"%"}', @result);
+-- SELECT @result;
 -- 
 
 DROP PROCEDURE IF EXISTS sp_groups_readlist;
@@ -19,12 +19,13 @@ CREATE PROCEDURE sp_groups_readlist
 BEGIN
 
   --
-  -- variables
+  -- Variables
   --
   DECLARE procedure_name varchar(100) DEFAULT 'sp_groups_readlist';
   DECLARE error_msg varchar(1000) DEFAULT '';
   DECLARE error_log_id int DEFAULT 0;
-  DECLARE p_count int DEFAULT 0;
+  DECLARE v_count int DEFAULT 0;
+  DECLARE log_msgs json DEFAULT JSON_ARRAY();
 
   -- filters
   DECLARE name_filter varchar(100);
@@ -36,43 +37,43 @@ BEGIN
 
 
   --
-  -- error handling declarations
+  -- Error handling declarations
   --
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
   BEGIN
+    -- Get error info
+    GET CURRENT DIAGNOSTICS CONDITION 1
+      @sqlstate = RETURNED_SQLSTATE, 
+      @errno = MYSQL_ERRNO,
+      @text = MESSAGE_TEXT;
 
-    CALL sp_handle_error(procedure_name, result);
-    SELECT result;
+    CALL sp_handle_error_diagnostic(@sqlstate, @errno, @text, log_msgs, procedure_name, result);
+
   END;
 
-
   --
-  -- temp tables
+  -- Temp tables
   --
-  DROP TABLE IF EXISTS log_message CASCADE;
-  CREATE TEMPORARY TABLE log_message (
-    log_msg varchar(5000),
-    log_date datetime
-  );
-
-  DROP TABLE IF EXISTS response;
-  CREATE TEMPORARY TABLE response 
+  DROP TEMPORARY TABLE IF EXISTS response___sp_permissions_readlist;
+  CREATE TEMPORARY TABLE response___sp_permissions_readlist 
     SELECT * FROM groups_roles gr LIMIT 0;
 
 
 
   --
-  -- log the parameter values passed
+  -- Log the parameter values passed
   --
-	INSERT INTO log_message VALUES ('ParameterList:', NOW());
-	INSERT INTO log_message VALUES (CONCAT('offsetRows: ', IFNULL(CAST(offsetRows AS CHAR), 'NULL')), NOW());
-	INSERT INTO log_message VALUES (CONCAT('fetchRows: ', IFNULL(CAST(fetchRows AS char(20)), 'NULL')), NOW());
-	INSERT INTO log_message VALUES (CONCAT('filterJson: ', IFNULL(filterJson, 'NULL')), NOW());
-	INSERT INTO log_message VALUES (CONCAT('searchJson: ', IFNULL(CAST(searchJson AS char), 'NULL')), NOW());
+	SELECT fn_add_log_message(log_msgs, 'ParameterList:') INTO log_msgs;
+  SELECT fn_add_log_message(log_msgs, CONCAT('offsetRows: ', IFNULL(CAST(offsetRows AS CHAR), 'NULL'))) INTO log_msgs;
+  SELECT fn_add_log_message(log_msgs, CONCAT('fetchRows: ', IFNULL(CAST(fetchRows AS char(20)), 'NULL'))) INTO log_msgs;
+  SELECT fn_add_log_message(log_msgs, CONCAT('filterJson: ', IFNULL(filterJson, 'NULL'))) INTO log_msgs;
+  SELECT fn_add_log_message(log_msgs, CONCAT('searchJson: ', IFNULL(CAST(searchJson AS char), 'NULL'))) INTO log_msgs;
+  SELECT fn_add_log_message(log_msgs, CONCAT('ProfileId: ', IFNULL(CAST(0 AS char), 'NULL'))) INTO log_msgs;
 
 
+
   --
-  -- default values
+  -- Default values
   --
   SET offsetRows = IFNULL(offsetRows, 0);
   SET fetchRows = IFNULL(fetchRows, 10);
@@ -90,31 +91,33 @@ BEGIN
     SET searchJson = '{}';
   END IF;
 
+  SELECT fn_add_log_message(log_msgs, 'Default values done') INTO log_msgs;
+
 
 
   --
-  -- get filter values
+  -- Get filter values
   --
   SELECT JSON_VALUE (filterJson, '$.name') INTO name_filter;
   SELECT JSON_VALUE (filterJson, '$.description') INTO description_filter;
   
-  INSERT INTO log_message VALUES ('get filter values done', NOW());
+  SELECT fn_add_log_message(log_msgs, 'Get filter values done') INTO log_msgs;
 
 
   --
-  -- get search values
+  -- Get search values
   --
   SELECT JSON_VALUE (searchJson, '$.name') INTO name_search;
   SELECT JSON_VALUE (searchJson, '$.description') INTO description_search;
   
-  INSERT INTO log_message VALUES ('get search values done', NOW());
+  SELECT fn_add_log_message(log_msgs, 'Get search values done') INTO log_msgs;
 
 
 
   -- 
-  -- get final result
+  -- Get final result
   --
-  INSERT INTO response (name, description)
+  INSERT INTO response___sp_permissions_readlist (name, description)
   SELECT
     name,
     description
@@ -128,20 +131,22 @@ BEGIN
   AND (name_search IS NULL OR name_search LIKE gr.name)
   AND (description_search IS NULL OR description_search LIKE gr.description);
  
-  INSERT INTO log_message VALUES ('get final result done', NOW());
+  SELECT fn_add_log_message(log_msgs, 'Get final result done') INTO log_msgs;
 
   
-  SELECT COUNT(*) FROM response r INTO p_count;
-  SELECT JSON_SET(result, '$.recordCount', p_count) INTO result;
+  SELECT COUNT(*) FROM response___sp_permissions_readlist r INTO v_count;
+  SELECT JSON_SET(result, '$.recordCount', v_count) INTO result;
+
+  SELECT fn_add_log_message(log_msgs, 'Result count done') INTO log_msgs;
 
 
   --  
-  -- send the response
+  -- Send the response
   --
   SELECT
     r.name,
     r.description
-  FROM response r;
+  FROM response___sp_permissions_readlist r;
 
 
 END
