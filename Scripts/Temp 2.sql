@@ -11,7 +11,7 @@ BEGIN
 
   START TRANSACTION;
 
-  CALL sp_tran_test1(TRUE, error_code);
+  CALL sp_tran_test1(error_code);
 
   -- because we use SAVEPOINT. At this point we have BEEN ROLLED BACK already inside the proc
   -- This have the advantage that we can rollback only the proc with error and continue doint stuff

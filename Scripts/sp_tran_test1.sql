@@ -2,14 +2,14 @@
 DELIMITER $$
 CREATE PROCEDURE sp_tran_test1
 (
-  IN auto_commit bool,
   OUT error_code int 
 )
 CONTAINS SQL
-Proc_Exit:
 BEGIN
 
   DECLARE throwerror int DEFAULT 0;
+  DECLARE within_tran bool DEFAULT FALSE;
+  DECLARE procedure_name text DEFAULT 'sp_tran_test1';
 
   DECLARE EXIT HANDLER FOR SQLEXCEPTION 
   BEGIN
@@ -22,21 +22,33 @@ BEGIN
 
 
     SET error_code = 1;
-    ROLLBACK TO SAVEPOINT sp_tran_test1;
-    
---     IF auto_commit THEN
---       ROLLBACK;
---       SET AUTOCOMMIT = 1;
---     END IF;
+   
+    IF within_tran THEN
+      ROLLBACK TO SAVEPOINT sp_tran_test1;
+    ELSE
+       ROLLBACK; 
+    END IF;
 
   END;
 
   --
   -- default values
   --
---   SET AUTOCOMMIT = 0;
---   SET auto_commit = IFNULL(auto_commit,TRUE);
-  SAVEPOINT sp_tran_test1;
+  CALL sp_within_transaction(within_tran);
+  SELECT within_tran;
+  
+
+  --
+  -- Start Tran or Savepoint
+  --
+  IF within_tran THEN
+    SAVEPOINT sp_tran_test1;
+    SELECT 'SAVEPOINT sp_tran_test1';
+  ELSE 
+    START TRANSACTION;
+    SELECT 'START TRANSACTION';
+  END IF;
+  
 
 
   --
@@ -55,22 +67,15 @@ BEGIN
     SIGNAL SQLSTATE '12345' 
       SET MESSAGE_TEXT = 'ERROR: sp_tran_test1_2';    
 
-
---     IF auto_commit THEN
---       ROLLBACK;
---       SET AUTOCOMMIT = 1;
---     END IF;
---     LEAVE Proc_Exit;
   END IF;
 
   -- Error
 --   SET throwerror = 1/0;
 
   -- Commit
---   IF auto_commit THEN
---     COMMIT;
---     SET AUTOCOMMIT = 1;
---   END IF;
+  IF within_tran THEN
+    COMMIT;
+  END IF;
 
   -- Send success
   SET error_code = 0;

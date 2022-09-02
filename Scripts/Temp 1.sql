@@ -280,7 +280,13 @@ SELECT @Out_Param;
 -- ROLLBACK;
 
 
-CALL sp_tran_test1(TRUE, @error_code);
+-- START TRANSACTION;
+-- CALL sp_within_transaction(@within_tran);
+-- SELECT @within_tran;
+-- COMMIT;
+
+
+CALL sp_tran_test1(@error_code);
 
 CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
 SELECT @result;
@@ -290,3 +296,5 @@ SELECT @Out_Param;
 
 
 CALL run_test();
+
+

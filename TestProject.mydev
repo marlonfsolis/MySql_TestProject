@@ -15,13 +15,13 @@
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error_diagnostic.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error_proc.sql" />
-    <File RelPath="Procedures" Link=".\Procedures\sp_is_in_transaction.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_delete.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_read.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_readlist.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_write.sql" />
     <File RelPath="Procedures" Link=".\Scripts\sp_tran_test1.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_tran_test1_2.sql" />
+    <File RelPath="Procedures" Link=".\Procedures\sp_within_transaction.sql" />
     <File RelPath="Scripts" Link=".\Scripts\Temp 1.sql" />
     <File RelPath="Scripts" Link=".\Scripts\Temp 2.sql" />
     <File RelPath="Scripts" Link=".\Scripts\Temp 3.sql" />
@@ -66,11 +66,11 @@
         <File RelPath="Procedures" Name="sp_handle_error_proc.sql" BuildAction="Build" />
         <File RelPath="Functions" Name="fn_add_log_message.sql" BuildAction="Build" />
         <File RelPath="Scripts" Name="Temp 2.sql" BuildAction="Build" />
-        <File RelPath="Procedures" Name="sp_is_in_transaction.sql" BuildAction="Build" />
         <File RelPath="Scripts" Name="Temp 3.sql" BuildAction="Build" />
         <File RelPath="Scripts" Name="Temp 4.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_tran_test1.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_tran_test1_2.sql" BuildAction="Build" />
+        <File RelPath="Procedures" Name="sp_within_transaction.sql" BuildAction="Build" />
         <File RelPath="" Name="PostDeployment.sql" BuildAction="Build" />
       </Build>
     </Configuration>
