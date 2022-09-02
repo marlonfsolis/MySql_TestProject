@@ -2,8 +2,8 @@
 -- Get permissions list.
 -- The list can be filteres and paginated.
 --
--- CALL sp_Permission_Read(0, 10, '{"name":"Permission1"}', '{"description":"%"}', @Out_Param);
--- SELECT @Out_Param;
+-- CALL sp_Permission_Read(0, 10, '{"name":"Permission1"}', '{"description":"%"}', @result);
+-- SELECT @result;
 -- 
 
 DROP PROCEDURE IF EXISTS sp_permissions_readlist;
@@ -22,10 +22,10 @@ BEGIN
   -- Variables
   --
   DECLARE procedure_name varchar(100) DEFAULT 'sp_permissions_readlist';
-  DECLARE error_msg varchar(1000) DEFAULT '';
+  DECLARE error_msg text DEFAULT '';
   DECLARE error_log_id int DEFAULT 0;
-  DECLARE p_count int DEFAULT 0;
-  DECLARE log_msg json DEFAULT JSON_ARRAY();
+  DECLARE v_count int DEFAULT 0;
+  DECLARE log_msgs json DEFAULT JSON_ARRAY();
 
   -- filters
   DECLARE name_filter varchar(100);
@@ -40,14 +40,13 @@ BEGIN
   --
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
   BEGIN
-
     -- Get error info
     GET CURRENT DIAGNOSTICS CONDITION 1
       @sqlstate = RETURNED_SQLSTATE, 
       @errno = MYSQL_ERRNO,
       @text = MESSAGE_TEXT;
 
-    CALL sp_handle_error_diagnostic(@sqlstate, @errno, @text, log_msg, procedure_name, result);
+    CALL sp_handle_error_diagnostic(@sqlstate, @errno, @text, log_msgs, procedure_name, result);
 
   END;
 
@@ -63,12 +62,12 @@ BEGIN
   --
   -- Log the parameter values passed
   --
-	SELECT fn_add_log_message(log_msg, 'ParameterList:') INTO log_msg;
-  SELECT fn_add_log_message(log_msg, CONCAT('offsetRows: ', IFNULL(CAST(offsetRows AS CHAR), 'NULL'))) INTO log_msg;
-  SELECT fn_add_log_message(log_msg, CONCAT('fetchRows: ', IFNULL(CAST(fetchRows AS char(20)), 'NULL'))) INTO log_msg;
-  SELECT fn_add_log_message(log_msg, CONCAT('filterJson: ', IFNULL(filterJson, 'NULL'))) INTO log_msg;
-  SELECT fn_add_log_message(log_msg, CONCAT('searchJson: ', IFNULL(CAST(searchJson AS char), 'NULL'))) INTO log_msg;
-  SELECT fn_add_log_message(log_msg, CONCAT('ProfileId: ', IFNULL(CAST(0 AS char), 'NULL'))) INTO log_msg;
+	SELECT fn_add_log_message(log_msgs, 'ParameterList:') INTO log_msgs;
+  SELECT fn_add_log_message(log_msgs, CONCAT('offsetRows: ', IFNULL(CAST(offsetRows AS CHAR), 'NULL'))) INTO log_msgs;
+  SELECT fn_add_log_message(log_msgs, CONCAT('fetchRows: ', IFNULL(CAST(fetchRows AS char(20)), 'NULL'))) INTO log_msgs;
+  SELECT fn_add_log_message(log_msgs, CONCAT('filterJson: ', IFNULL(filterJson, 'NULL'))) INTO log_msgs;
+  SELECT fn_add_log_message(log_msgs, CONCAT('searchJson: ', IFNULL(CAST(searchJson AS char), 'NULL'))) INTO log_msgs;
+  SELECT fn_add_log_message(log_msgs, CONCAT('ProfileId: ', IFNULL(CAST(0 AS char), 'NULL'))) INTO log_msgs;
 
 
 
@@ -91,7 +90,7 @@ BEGIN
     SET searchJson = '{}';
   END IF;
 
-  SELECT fn_add_log_message(log_msg, 'Default values done') INTO log_msg;
+  SELECT fn_add_log_message(log_msgs, 'Default values done') INTO log_msgs;
 
 
 
@@ -104,7 +103,7 @@ BEGIN
   INTO name_filter,
       description_filter;
   
-  SELECT fn_add_log_message(log_msg, 'Get filter values done') INTO log_msg;
+  SELECT fn_add_log_message(log_msgs, 'Get filter values done') INTO log_msgs;
 
 
 
@@ -117,7 +116,7 @@ BEGIN
   INTO name_filter,
       description_filter;
 
-  SELECT fn_add_log_message(log_msg, 'Get search values done') INTO log_msg;
+  SELECT fn_add_log_message(log_msgs, 'Get search values done') INTO log_msgs;
 
 
 
@@ -138,13 +137,13 @@ BEGIN
   AND (name_search IS NULL OR name_search LIKE p.description)
   AND (description_search IS NULL OR description_search LIKE p.description);
   
-  SELECT fn_add_log_message(log_msg, 'Get final result done') INTO log_msg;
+  SELECT fn_add_log_message(log_msgs, 'Get final result done') INTO log_msgs;
 
   
-  SELECT COUNT(*) FROM response___sp_permissions_readlist r INTO p_count;
-  SELECT JSON_SET(result, '$.recordCount', p_count) INTO result;
+  SELECT COUNT(*) FROM response___sp_permissions_readlist r INTO v_count;
+  SELECT JSON_SET(result, '$.recordCount', v_count) INTO result;
 
-  SELECT fn_add_log_message(log_msg, 'Result count done') INTO log_msg;
+  SELECT fn_add_log_message(log_msgs, 'Result count done') INTO log_msgs;
 
 
   --  

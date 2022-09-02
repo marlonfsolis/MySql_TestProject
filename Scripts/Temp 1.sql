@@ -286,15 +286,15 @@ SELECT @Out_Param;
 -- COMMIT;
 
 
-CALL sp_tran_test1(@error_code);
-
-CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
-SELECT @result;
-
-CALL sp_permissions_delete('Permission6', TRUE, @Out_Param);
-SELECT @Out_Param;
-
-
-CALL run_test();
+-- CALL sp_tran_test1(@error_code);
+-- 
+-- CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
+-- SELECT @result;
+-- 
+-- CALL sp_permissions_delete('Permission6', TRUE, @Out_Param);
+-- SELECT @Out_Param;
+-- 
+-- 
+-- CALL run_test();
 
 

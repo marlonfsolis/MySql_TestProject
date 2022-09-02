@@ -4,11 +4,8 @@
 <Options Version="3.0">
   <Documents>
     <Document Moniker=".\Scripts\Temp 1.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
-    <Document Moniker=".\Scripts\Temp 2.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
-    <Document Moniker=".\Scripts\sp_tran_test1.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" Active="True" />
-    <Document Moniker=".\Procedures\sp_tran_test1_2.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
-    <Document Moniker=".\Procedures\sp_permissions_readlist.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
-    <Document Moniker=".\Procedures\sp_within_transaction.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
+    <Document Moniker=".\Scripts\sp_tran_test1.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
+    <Document Moniker=".\Procedures\sp_permissions_readlist.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" Active="True" />
   </Documents>
   <Services>
     <Service GUID="{c7b76517-6978-4a0b-8d38-57b7f7223edb}">
@@ -28,15 +25,7 @@
       </Persist>
     </Service>
     <Service GUID="{811fba21-97c2-44b6-8c1c-eae1f1315f2d}">
-      <Persist>
-        <Bookmarks>
-          <Document Moniker="C:\Projects\MySql\MySql_TestProject\Procedures\sp_tran_test1_2.sql">
-            <Bookmark Line="29" Character="13" />
-            <Bookmark Line="37" Character="9" />
-            <Bookmark Line="54" Character="11" />
-          </Document>
-        </Bookmarks>
-      </Persist>
+      <Persist />
     </Service>
   </Services>
 </Options>
