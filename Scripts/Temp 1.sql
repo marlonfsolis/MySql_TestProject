@@ -229,8 +229,8 @@ CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
 SELECT @result;
 
 
--- CALL sp_permissions_read('Permission1', @result);
--- SELECT @result;
+CALL sp_permissions_read('Permission1', @result);
+SELECT @result;
 
 
 CALL sp_permissions_write('{"name":"Permission4", "description":"Permission 4"}', TRUE, @Out_Param);
