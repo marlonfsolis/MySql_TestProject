@@ -2,8 +2,8 @@
 -- Created on: 8/24/2022 
 -- Description: Delete one permission by name.
 --
--- CALL sp_permissions_delete('{"name":"Permission1", "description":"Permission 1"}', TRUE, @Out_Param);
--- SELECT @Out_Param;
+-- CALL sp_permissions_delete('Permission1', @result);
+-- SELECT @result;
 -- 
 
 DROP PROCEDURE IF EXISTS sp_permissions_delete;
@@ -11,10 +11,8 @@ DELIMITER $$
 CREATE PROCEDURE sp_permissions_delete
 (
   IN name varchar(100),
-  IN auto_commit bool,
   OUT result json
-)
-Proc_Exit: 
+) 
 BEGIN
 
   --
@@ -23,8 +21,10 @@ BEGIN
   DECLARE procedure_name varchar(100) DEFAULT 'sp_permissions_delete';
   DECLARE error_msg varchar(1000) DEFAULT '';
   DECLARE error_log_id int DEFAULT 0;
-  DECLARE p_count int DEFAULT 0;
-  DECLARE log_msg json DEFAULT JSON_ARRAY();
+  DECLARE v_count int DEFAULT 0;
+  DECLARE log_msgs json DEFAULT JSON_ARRAY();
+  DECLARE within_tran bool DEFAULT FALSE;
+  DECLARE tran_started bool DEFAULT TRUE;
 
 
   --
@@ -32,30 +32,26 @@ BEGIN
   --
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
   BEGIN
-
     -- Get error info
     GET CURRENT DIAGNOSTICS CONDITION 1
       @sqlstate = RETURNED_SQLSTATE, 
       @errno = MYSQL_ERRNO,
       @text = MESSAGE_TEXT;
     
-    CALL sp_handle_error_diagnostic(@sqlstate, @errno, @text, log_msg, procedure_name, result);
-
-    IF auto_commit THEN
+    IF tran_started THEN
       ROLLBACK;
-      SET AUTOCOMMIT = 1;
+    ELSE
+       ROLLBACK TO SAVEPOINT sp_permissions_delete; 
     END IF;
 
+    CALL sp_handle_error_diagnostic(@sqlstate, @errno, @text, log_msgs, procedure_name, result);
+
   END;
-
-  SET AUTOCOMMIT = 0;
-
-
 
   --
   -- Temp tables
   --
-  DROP TABLE IF EXISTS response___sp_permissions_delete;
+  DROP TEMPORARY TABLE IF EXISTS response___sp_permissions_delete;
   CREATE TEMPORARY TABLE response___sp_permissions_delete 
     SELECT * FROM permissions LIMIT 0;
 
@@ -64,39 +60,50 @@ BEGIN
   --
   -- Log the parameter values passed
   --
-  SELECT fn_add_log_message(log_msg, 'ParameterList:') INTO log_msg;
-  SELECT fn_add_log_message(log_msg, CONCAT('name: ', IFNULL(name, 'NULL'))) INTO log_msg;
+  SELECT fn_add_log_message(log_msgs, 'ParameterList:') INTO log_msgs;
+  SELECT fn_add_log_message(log_msgs, CONCAT('name: ', IFNULL(name, 'NULL'))) INTO log_msgs;
 
 
 
   --
   -- Default values
   --
+  CALL sp_within_transaction(within_tran);
   SET result = JSON_OBJECT('success', TRUE, 'msg', '', 'errorLogId', 0, 'recordCount', 0);
    
+
+
+  --
+  -- Start Tran or Savepoint
+  --
+  IF within_tran THEN
+    SAVEPOINT sp_permissions_delete;
+  ELSE 
+    START TRANSACTION;
+    SET tran_started = TRUE;
+  END IF;
+
 
 
   --
   -- Validate input value
   --
   IF IFNULL(name,'')='' THEN
-    CALL sp_handle_error_proc('The field name is required.', log_msg, procedure_name, result);
-    SET AUTOCOMMIT = 1;
-    LEAVE Proc_Exit;
-
+    SIGNAL SQLSTATE '12345'
+      SET MESSAGE_TEXT = 'The field name is required.';
+     
   END IF;
   
   IF NOT EXISTS (
     SELECT 1 FROM permissions p WHERE p.name = name
   ) THEN
-    CALL sp_handle_error_proc('The permission was not found.', log_msg, procedure_name, result);
-    SET AUTOCOMMIT = 1;
-    LEAVE Proc_Exit;
-          
+    SIGNAL SQLSTATE '12345'
+      SET MESSAGE_TEXT = 'The permission was not found.';
+     
   END IF;
   
 
-  SELECT fn_add_log_message(log_msg, 'Validate input values done') INTO log_msg;
+  SELECT fn_add_log_message(log_msgs, 'Validate input values done') INTO log_msgs;
 
 
 
@@ -110,7 +117,7 @@ BEGIN
   FROM permissions p
   WHERE p.name = name;
 
-  SELECT fn_add_log_message(log_msg, 'Old values save done') INTO log_msg;
+  SELECT fn_add_log_message(log_msgs, 'Old values save done') INTO log_msgs;
 
 
 
@@ -129,12 +136,12 @@ BEGIN
     FROM permissions p
     WHERE p.name = name;
 
-  SELECT fn_add_log_message(log_msg, 'Delete record done') INTO log_msg;
+  SELECT fn_add_log_message(log_msgs, 'Delete record done') INTO log_msgs;
 
 
   
-  SELECT COUNT(*) FROM response___sp_permissions_delete r INTO p_count;
-  SELECT JSON_SET(result, '$.recordCount', p_count) INTO result;
+  SELECT COUNT(*) FROM response___sp_permissions_delete r INTO v_count;
+  SELECT JSON_SET(result, '$.recordCount', v_count) INTO result;
 
 
   --  
@@ -147,9 +154,9 @@ BEGIN
 
 
 
-  IF auto_commit THEN
+  -- Commit
+  IF tran_started THEN
     COMMIT;
-    SET AUTOCOMMIT = 1;
   END IF;
 
 END

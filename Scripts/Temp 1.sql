@@ -221,7 +221,7 @@
 -- Procedures calls
 --
 
-CALL sp_permissions_delete('Permission6', TRUE, @Out_Param);
+CALL sp_permissions_delete('Permission4', TRUE, @Out_Param);
 SELECT @Out_Param;
 
 

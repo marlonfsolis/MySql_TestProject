@@ -3,9 +3,9 @@
 <!-- Modifying this generated file will probably render it invalid -->
 <Options Version="3.0">
   <Documents>
-    <Document Moniker=".\Scripts\Temp 1.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
+    <Document Moniker=".\Scripts\Temp 1.sql" ActiveView="Data" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" Active="True" />
     <Document Moniker=".\Scripts\sp_tran_test1.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
-    <Document Moniker=".\Procedures\sp_permissions_read.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" Active="True" />
+    <Document Moniker=".\Procedures\sp_permissions_delete.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
   </Documents>
   <Services>
     <Service GUID="{c7b76517-6978-4a0b-8d38-57b7f7223edb}">

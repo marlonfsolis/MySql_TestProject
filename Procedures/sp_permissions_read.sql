@@ -1,7 +1,7 @@
 ﻿--
 -- Get one permission by its ID
 --
--- CALL sp_Permission_Read(1, @result);
+-- CALL sp_Permission_Read('Permission1', @result);
 -- SELECT @result;
 -- 
 
