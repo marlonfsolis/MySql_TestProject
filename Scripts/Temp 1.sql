@@ -221,32 +221,42 @@
 -- Procedures calls
 --
 
-CALL sp_permissions_delete('Permission4', TRUE, @Out_Param);
-SELECT @Out_Param;
+-- CALL sp_permissions_delete('Permission4', TRUE, @Out_Param);
+-- SELECT @Out_Param;
 
 
-CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
-SELECT @result;
+-- CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
+-- SELECT @result;
 
 
-CALL sp_permissions_read('Permission1', @result);
-SELECT @result;
+-- CALL sp_permissions_read('Permission1', @result);
+-- SELECT @result;
 
 
-CALL sp_permissions_write('{"name":"Permission4", "description":"Permission 4"}', @result);
-SELECT @result;
+-- CALL sp_permissions_write('{"name":"Permission4", "description":"Permission 4"}', @result);
+-- SELECT @result;
 
 
 -- CALL sp_error_log_readlist(0, 10, NULL, NULL);
 -- CALL sp_error_log_truncate();
 
 
--- CALL sp_groups_readlist(0, 0, NULL, NULL, @result);
--- SELECT @result;
+CALL sp_groups_readlist(0, 0, NULL, NULL, @result);
+SELECT @result;
 
 
--- CALL sp_groups_read('Group11', @result);
--- SELECT @result;
+CALL sp_groups_read('Group1', @result);
+SELECT @result;
+
+
+CALL sp_groups_write('{"name":"Group3", "description":"Group 3"}', @result);
+SELECT @result;
+
+
+CALL sp_groups_delete('Group3', @result);
+SELECT @result;
+
+
 
 
 
@@ -258,18 +268,10 @@ SELECT @result;
 
 
 --
--- Proc testing calls
+-- Transaction testing
 --
 -- CALL sp_tran_test(TRUE);
 -- CALL sp_temptable_test_1();
-
-
--- 
--- CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
--- CALL sp_groups_readlist(0, 0, NULL, NULL, @result);
--- 
--- CALL sp_permissions_delete('Permission4', @Out_Param);
--- DELETE FROM groups_roles WHERE name = 'Group4';
 
 
 -- SET AUTOCOMMIT = 1;

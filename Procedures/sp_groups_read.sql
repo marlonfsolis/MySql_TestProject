@@ -2,8 +2,8 @@
 -- Created on: 8/27/2022 
 -- Description: Get one record.
 --
--- CALL sp_groups_read('Value', @Out_Param);
--- SELECT @Out_Param;
+-- CALL sp_groups_read('Group1', @result);
+-- SELECT @result;
 -- 
 
 DROP PROCEDURE IF EXISTS sp_groups_read;
@@ -21,7 +21,8 @@ BEGIN
   DECLARE procedure_name varchar(100) DEFAULT 'sp_groups_read';
   DECLARE error_msg varchar(1000) DEFAULT '';
   DECLARE error_log_id int DEFAULT 0;
-  DECLARE p_count int DEFAULT 0;
+  DECLARE v_count int DEFAULT 0;
+  DECLARE log_msgs json DEFAULT JSON_ARRAY();
 
 
 
@@ -30,9 +31,14 @@ BEGIN
   --
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
   BEGIN
+    -- Get error info
+    GET CURRENT DIAGNOSTICS CONDITION 1
+      @sqlstate = RETURNED_SQLSTATE, 
+      @errno = MYSQL_ERRNO,
+      @text = MESSAGE_TEXT;
 
-    CALL sp_handle_error(procedure_name, result);
-    SELECT result;
+    CALL sp_handle_error_diagnostic(@sqlstate, @errno, @text, log_msgs, procedure_name, result);
+
   END;
 
 
@@ -40,14 +46,8 @@ BEGIN
   --
   -- Temp tables
   --
-  DROP TABLE IF EXISTS log_message CASCADE;
-  CREATE TEMPORARY TABLE log_message (
-    log_msg varchar(5000),
-    log_date datetime
-  );
-
-  DROP TABLE IF EXISTS response;
-  CREATE TEMPORARY TABLE response 
+  DROP TEMPORARY TABLE IF EXISTS response___sp_groups_read;
+  CREATE TEMPORARY TABLE response___sp_groups_read 
     SELECT * FROM groups_roles gr LIMIT 0;
 
 
@@ -55,8 +55,9 @@ BEGIN
   --
   -- Log the parameter values passed
   --
-	INSERT INTO log_message VALUES ('ParameterList:', NOW());
-	INSERT INTO log_message VALUES (CONCAT('group_name: ', IFNULL(CAST(group_name AS CHAR), 'NULL')), NOW());
+  SELECT fn_add_log_message(log_msgs, 'ParameterList:') INTO log_msgs;
+  SELECT fn_add_log_message(log_msgs, CONCAT('group_name: ', IFNULL(CAST(group_name AS CHAR), 'NULL'))) INTO log_msgs;
+
 
 
   --
@@ -83,35 +84,36 @@ BEGIN
           
   END IF;
   
-
-  INSERT INTO log_message VALUES ('validate input values done', NOW());
+  SELECT fn_add_log_message(log_msgs, 'Validate input values done') INTO log_msgs;
   
 
 
   -- 
-  -- get final result
+  -- Get final result
   --
-  INSERT INTO response (name, description)
+  INSERT INTO response___sp_groups_read (name, description)
   SELECT
     gr.name,
     gr.description
   FROM groups_roles gr
   WHERE gr.name = group_name;
  
-  INSERT INTO log_message VALUES ('get final result done', NOW());
+  SELECT fn_add_log_message(log_msgs, 'Get final result done') INTO log_msgs;
 
   
-  SELECT COUNT(*) FROM response r INTO p_count;
-  SELECT JSON_SET(result, '$.recordCount', p_count) INTO result;
+  SELECT COUNT(*) FROM response___sp_groups_read r INTO v_count;
+  SELECT JSON_SET(result, '$.recordCount', v_count) INTO result;
+
+  SELECT fn_add_log_message(log_msgs, 'Record count done') INTO log_msgs;
 
 
   --  
-  -- send the response
+  -- Send the response
   --
   SELECT
     r.name,
     r.description
-  FROM response r;
+  FROM response___sp_groups_read r;
 
 
 END

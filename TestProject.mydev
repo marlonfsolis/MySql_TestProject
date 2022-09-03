@@ -10,8 +10,10 @@
     <File RelPath="Functions" Link=".\Functions\fn_add_log_message.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_error_log_readlist.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_error_log_truncate.sql" />
+    <File RelPath="Procedures" Link=".\Procedures\sp_groups_delete.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_groups_read.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_groups_readlist.sql" />
+    <File RelPath="Procedures" Link=".\Procedures\sp_groups_write.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error_diagnostic.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error_proc.sql" />
@@ -71,6 +73,8 @@
         <File RelPath="Procedures" Name="sp_tran_test1.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_tran_test1_2.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_within_transaction.sql" BuildAction="Build" />
+        <File RelPath="Procedures" Name="sp_groups_write.sql" BuildAction="Build" />
+        <File RelPath="Procedures" Name="sp_groups_delete.sql" BuildAction="Build" />
         <File RelPath="" Name="PostDeployment.sql" BuildAction="Build" />
       </Build>
     </Configuration>
