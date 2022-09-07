@@ -280,7 +280,7 @@ CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
 SELECT * FROM permissions_groups pg;
 DELETE FROM permissions_groups WHERE group_name = 'Group3';
 
-CALL sp_groups_assign_permissions_write('{"group":"Group3", "permissions":["Permission3", "Permission4", "Permission5"]}', @result);
+CALL sp_permissions_group_write('{"group":"Group3", "permissions":["Permission3", "Permission4", "Permission5"]}', @result);
 SELECT @result;
 
 
