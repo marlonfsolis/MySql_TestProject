@@ -184,6 +184,24 @@
 --     ) 
 --   ) AS jt;
 
+-- SET @j = '{"group":"Group1", "permissions":["Permission1", "Permission2", "Permission3"]}';
+-- SET @arr = JSON_VALUE(@j,'$.permissions');
+-- SELECT * 
+-- FROM JSON_TABLE(@arr, '$[*]' COLUMNS(
+--      permission varchar(100) PATH '$'
+--     ) 
+--   ) AS jt;
+
+-- SELECT *
+--      FROM
+--        JSON_TABLE(
+--          '[ {"a": 1, "b": [11,111]}, {"a": 2, "b": [22,222]}, {"a":3}]',
+--          '$[*]' COLUMNS(
+--                  a INT PATH '$.a',
+--                  NESTED PATH '$.b[*]' COLUMNS (b INT PATH '$')
+--                 )
+--         ) AS jt;
+
 
 --
 -- IF ELSE
@@ -233,7 +251,7 @@
 -- SELECT @result;
 
 
--- CALL sp_permissions_write('{"name":"Permission4", "description":"Permission 4"}', @result);
+-- CALL sp_permissions_write('{"name":"Permission5", "description":"Permission 5"}', @result);
 -- SELECT @result;
 
 
@@ -256,6 +274,14 @@ SELECT @result;
 CALL sp_groups_delete('Group3', @result);
 SELECT @result;
 
+
+CALL sp_groups_readlist(0, 0, NULL, NULL, @result);
+CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
+SELECT * FROM permissions_groups pg;
+DELETE FROM permissions_groups WHERE group_name = 'Group3';
+
+CALL sp_groups_assign_permissions_write('{"group":"Group3", "permissions":["Permission3", "Permission4", "Permission5"]}', @result);
+SELECT @result;
 
 
 

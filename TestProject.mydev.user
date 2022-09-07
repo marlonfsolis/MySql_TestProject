@@ -3,10 +3,8 @@
 <!-- Modifying this generated file will probably render it invalid -->
 <Options Version="3.0">
   <Documents>
-    <Document Moniker=".\Scripts\Temp 1.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" Active="True" />
-    <Document Moniker=".\Procedures\sp_groups_read.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
-    <Document Moniker=".\Procedures\sp_groups_write.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
-    <Document Moniker=".\Procedures\sp_groups_delete.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
+    <Document Moniker=".\Scripts\Temp 1.sql" ActiveView="Data" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
+    <Document Moniker=".\Procedures\sp_groups_assign_permissions_write.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" Active="True" />
   </Documents>
   <Services>
     <Service GUID="{c7b76517-6978-4a0b-8d38-57b7f7223edb}">
@@ -28,22 +26,8 @@
     <Service GUID="{811fba21-97c2-44b6-8c1c-eae1f1315f2d}">
       <Persist>
         <Bookmarks>
-          <Document Moniker="C:\Projects\MySql\MySql_TestProject\Procedures\sp_groups_delete.sql">
-            <Bookmark Line="8" Character="28" />
-            <Bookmark Line="10" Character="0" />
-            <Bookmark Line="20" Character="29" />
-            <Bookmark Line="43" Character="11" />
-            <Bookmark Line="53" Character="26" />
-            <Bookmark Line="54" Character="18" />
-            <Bookmark Line="55" Character="18" />
-            <Bookmark Line="79" Character="0" />
-            <Bookmark Line="97" Character="18" />
-            <Bookmark Line="112" Character="7" />
-            <Bookmark Line="116" Character="7" />
-            <Bookmark Line="127" Character="9" />
-            <Bookmark Line="135" Character="9" />
-            <Bookmark Line="142" Character="16" />
-            <Bookmark Line="152" Character="0" />
+          <Document Moniker="C:\Projects\MySql\MySql_TestProject\Procedures\sp_groups_assign_permissions_write.sql">
+            <Bookmark Line="118" Character="4" />
           </Document>
         </Bookmarks>
       </Persist>
