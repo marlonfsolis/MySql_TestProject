@@ -277,10 +277,15 @@ SELECT @result;
 
 CALL sp_groups_readlist(0, 0, NULL, NULL, @result);
 CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
-SELECT * FROM permissions_groups pg;
+SELECT pg.group_name,pg.permission_name FROM permissions_groups pg;
 DELETE FROM permissions_groups WHERE group_name = 'Group3';
 
 CALL sp_permissions_group_write('{"group":"Group3", "permissions":["Permission3", "Permission4", "Permission5"]}', @result);
+SELECT @result;
+
+
+CALL sp_permissions_group_delete('{"group":"Group3", "permissions":["Permission3", "Permission4"]}', @result);
+CALL sp_permissions_group_delete('{"group":"Group3", "permissions":["Permission3", "Permission4", "Permission5"]}', @result);
 SELECT @result;
 
 
@@ -289,7 +294,7 @@ SELECT @result;
 
 -- SELECT * FROM error_log el ORDER BY el.error_detail DESC;
 -- SELECT * FROM error_log_trace elt ORDER BY elt.trace_date DESC;
--- CALL sp_error_log_readlist(0, 10, NULL, NULL);
+-- CALL sp_error_log_readlist(0, 1, NULL, NULL);
 -- CALL sp_error_log_truncate();
 
 

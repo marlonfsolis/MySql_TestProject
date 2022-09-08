@@ -18,7 +18,7 @@ CREATE PROCEDURE sp_error_log_readlist
 BEGIN
 
   --
-  -- variables
+  -- Variables
   --
 
   -- filters
@@ -28,16 +28,18 @@ BEGIN
 
 
   --
-  -- temp tables
+  -- Temp tables
   --
   DROP TABLE IF EXISTS errors__sp_error_log_readlist;
-  CREATE TEMPORARY TABLE errors__sp_error_log_readlist 
-    SELECT * FROM error_log el LIMIT 0;
+  CREATE TEMPORARY TABLE errors__sp_error_log_readlist(
+    error_logid int,
+    error_message text
+  );
 
 
 
   --
-  -- default values
+  -- Default values
   --
   SET offsetRows = IFNULL(offsetRows, 0);
   SET fetchRows = IFNULL(fetchRows, 10);
@@ -57,28 +59,25 @@ BEGIN
 
 
   --
-  -- get filter values
+  -- Get filter values
   --
   SELECT JSON_VALUE (filterJson, '$.errorLogId') INTO errorlogid_filter;
-  
-  INSERT INTO log_message VALUES ('get filter values done', NOW());
 
 
   --
-  -- get search values
+  -- Get search values
   --
   SELECT JSON_VALUE (searchJson, '$.errorMsg') INTO errormsg_search;
-  
-  INSERT INTO log_message VALUES ('get search values done', NOW());
 
 
 
   -- 
-  -- get errors result
+  -- Get errors result
   --
-  INSERT INTO errors__sp_error_log_readlist (error_logid)
+  INSERT INTO errors__sp_error_log_readlist (error_logid, error_message)
   SELECT
-    el.error_logid
+    el.error_logid,
+    el.error_message
   FROM error_log el
   
   -- filter
@@ -89,9 +88,6 @@ BEGIN
   
   ORDER BY el.error_date DESC
   LIMIT fetchRows OFFSET offsetRows;
- 
-  
-  INSERT INTO log_message VALUES ('get errors done', NOW());
 
 
 
@@ -105,8 +101,8 @@ BEGIN
     el.stack_trace,
     el.error_date
   FROM error_log el
-  INNER JOIN errors__sp_error_log_readlist eselr
-    ON el.error_logid = eselr.error_logid;
+  INNER JOIN errors__sp_error_log_readlist err
+    ON el.error_logid = err.error_logid;
 
 
   --

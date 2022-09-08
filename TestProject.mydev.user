@@ -3,7 +3,8 @@
 <!-- Modifying this generated file will probably render it invalid -->
 <Options Version="3.0">
   <Documents>
-    <Document Moniker=".\Scripts\Temp 1.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
+    <Document Moniker=".\Scripts\Temp 1.sql" ActiveView="Data" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
+    <Document Moniker=".\Procedures\sp_permissions_group_delete.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
     <Document Moniker=".\Procedures\sp_permissions_group_write.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" Active="True" />
   </Documents>
   <Services>
@@ -24,7 +25,19 @@
       </Persist>
     </Service>
     <Service GUID="{811fba21-97c2-44b6-8c1c-eae1f1315f2d}">
-      <Persist />
+      <Persist>
+        <Bookmarks>
+          <Document Moniker="C:\Projects\MySql\MySql_TestProject\Procedures\sp_permissions_group_delete.sql">
+            <Bookmark Line="12" Character="5" />
+            <Bookmark Line="79" Character="46" />
+            <Bookmark Line="79" Character="64" />
+            <Bookmark Line="105" Character="16" />
+            <Bookmark Line="115" Character="15" />
+            <Bookmark Line="116" Character="15" />
+            <Bookmark Line="184" Character="54" />
+          </Document>
+        </Bookmarks>
+      </Persist>
     </Service>
   </Services>
 </Options>
