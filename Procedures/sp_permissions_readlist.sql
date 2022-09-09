@@ -134,8 +134,8 @@ BEGIN
   AND (description_filter IS NULL OR description_filter = p.description)
 
   -- search
-  AND (name_search IS NULL OR name_search LIKE p.description)
-  AND (description_search IS NULL OR description_search LIKE p.description);
+  AND (name_search IS NULL OR p.name LIKE name_search)
+  AND (description_search IS NULL OR p.description LIKE description_search);
   
   SELECT fn_add_log_message(log_msgs, 'Get final result done') INTO log_msgs;
 

@@ -128,8 +128,8 @@ BEGIN
   AND (description_filter IS NULL OR description_filter = gr.description)
 
   -- search
-  AND (name_search IS NULL OR name_search LIKE gr.name)
-  AND (description_search IS NULL OR description_search LIKE gr.description);
+  AND (name_search IS NULL OR gr.name LIKE name_search)
+  AND (description_search IS NULL OR gr.description LIKE description_search);
  
   SELECT fn_add_log_message(log_msgs, 'Get final result done') INTO log_msgs;
 
