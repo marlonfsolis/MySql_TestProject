@@ -19,6 +19,7 @@
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error_proc.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_delete.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_group_delete.sql" />
+    <File RelPath="Procedures" Link=".\Procedures\sp_permissions_group_readlist.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_group_write.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_read.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_readlist.sql" />
@@ -79,6 +80,7 @@
         <File RelPath="Procedures" Name="sp_groups_delete.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_permissions_group_write.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_permissions_group_delete.sql" BuildAction="Build" />
+        <File RelPath="Procedures" Name="sp_permissions_group_readlist.sql" BuildAction="Build" />
         <File RelPath="" Name="PostDeployment.sql" BuildAction="Build" />
       </Build>
     </Configuration>

@@ -283,11 +283,14 @@ DELETE FROM permissions_groups WHERE group_name = 'Group3';
 CALL sp_permissions_group_write('{"group":"Group3", "permissions":["Permission3", "Permission4", "Permission5"]}', @result);
 SELECT @result;
 
-
 CALL sp_permissions_group_delete('{"group":"Group3", "permissions":["Permission3", "Permission4"]}', @result);
 CALL sp_permissions_group_delete('{"group":"Group3", "permissions":["Permission3", "Permission4", "Permission5"]}', @result);
 SELECT @result;
 
+CALL sp_permissions_group_readlist(0, 10, 
+   '{"group_name":"Group1", "permission_name":null}', 
+   '{"group_name":null, "permission_name":null}', @result);
+SELECT @result;
 
 
 
