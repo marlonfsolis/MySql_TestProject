@@ -37,7 +37,7 @@ BEGIN
   SET procedure_name = IFNULL(procedure_name, 'N/A');
   
   IF JSON_VALID(result) = 0 THEN
-    SET result = JSON_OBJECT('success', TRUE, 'msg', '', 'errorLogId', 0, 'recordCount', 0);
+    SET result = JSON_OBJECT('success', FALSE, 'msg', 'Error', 'errorLogId', 0, 'recordCount', 0);
   END IF;
 
 
@@ -45,6 +45,10 @@ BEGIN
   --
   -- Get error info
   --
+  IF (SELECT fn_is_numeric(SUBSTR(error_msg,1,3))) = 0 THEN
+    SET error_msg = CONCAT('500|',error_msg);
+  END IF;
+
   SELECT 
     CONCAT('STORED PROC ERROR', 
       ' - PROC: ', procedure_name,

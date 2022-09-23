@@ -5,7 +5,7 @@
   <Properties>
     <Type>SQL Document Design</Type>
     <DatabaseProvider>59f90733-4d68-4fdf-82a7-f0fcbf5460aa</DatabaseProvider>
-    <ProviderVersion>9.1.8.0</ProviderVersion>
+    <ProviderVersion>9.1.21.0</ProviderVersion>
     <SchemaVersion>2.0</SchemaVersion>
   </Properties>
   <Connection>
@@ -18,10 +18,10 @@
   </Connection>
   <Views ShowAdditionalViews="False" IsLayoutActiveAttribute="True" MainViewAttribute="Code" MainViewScale="67">
     <View Name="Design" Visible="False" />
-    <View Name="Code" Active="True" Visible="True">
+    <View Name="Code" Visible="True">
       <Data />
     </View>
-    <View Name="Data" Visible="True" />
+    <View Name="Data" Active="True" Visible="True" />
     <View Name="Profiler" Visible="False" />
     <View Name="PivotGrid" Visible="False" />
   </Views>

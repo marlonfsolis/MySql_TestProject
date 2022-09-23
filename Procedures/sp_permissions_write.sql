@@ -94,7 +94,7 @@ BEGIN
   --
   IF JSON_VALID(p_json) = 0 THEN
     SIGNAL SQLSTATE '12345'
-      SET MESSAGE_TEXT = 'The json input is not valid.';
+      SET MESSAGE_TEXT = '400|The json input is not valid.';
      
   END IF;
 
@@ -118,7 +118,7 @@ BEGIN
   --
   IF IFNULL(name,'')='' THEN
     SIGNAL SQLSTATE '12345'
-      SET MESSAGE_TEXT = 'The field name is required.';
+      SET MESSAGE_TEXT = '400|The field name is required.';
      
   END IF;
 
@@ -129,7 +129,7 @@ BEGIN
   ) 
   THEN
     SIGNAL SQLSTATE '12345'
-      SET MESSAGE_TEXT = 'The permission name already exist.';
+      SET MESSAGE_TEXT = '400|The permission name already exist.';
      
   END IF;
   
