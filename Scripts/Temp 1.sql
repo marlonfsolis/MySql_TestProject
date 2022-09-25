@@ -137,7 +137,7 @@
 --
 -- Stored procedure call
 --
--- CALL sp_permissions_write('Permission4','Permission 4', @result);
+-- CALL sp_permissions_create('Permission4','Permission 4', @result);
 -- SELECT @result;
 -- SELECT * FROM my_temp_tbl mtt;
 
@@ -251,7 +251,7 @@
 -- SELECT @result;
 
 
--- CALL sp_permissions_write('{"name":"Permission5", "description":"Permission 5"}', @result);
+-- CALL sp_permissions_create('{"name":"Permission5", "description":"Permission 5"}', @result);
 -- SELECT @result;
 
 

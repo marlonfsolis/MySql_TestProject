@@ -2,13 +2,13 @@
 -- Created on: 8/23/2022 
 -- Description: Create one permission.
 --
--- CALL sp_permissions_write('{"name":"Permission1", "description":"Permission 1"}', @result);
+-- CALL sp_permissions_create('{"name":"Permission1", "description":"Permission 1"}', @result);
 -- SELECT @result;
 -- 
 
-DROP PROCEDURE IF EXISTS sp_permissions_write;
+DROP PROCEDURE IF EXISTS sp_permissions_create;
 DELIMITER $$
-CREATE PROCEDURE sp_permissions_write
+CREATE PROCEDURE sp_permissions_create
 (
   IN p_json json,
   OUT result json
@@ -18,7 +18,7 @@ BEGIN
   --
   -- Variables
   --
-  DECLARE procedure_name varchar(100) DEFAULT 'sp_permissions_write';
+  DECLARE procedure_name varchar(100) DEFAULT 'sp_permissions_create';
   DECLARE error_msg varchar(1000) DEFAULT '';
   DECLARE error_log_id int DEFAULT 0;
   DECLARE v_count int DEFAULT 0;
@@ -46,7 +46,7 @@ BEGIN
 		IF tran_started	THEN
 			ROLLBACK;
 		ELSE
-			 ROLLBACK	TO SAVEPOINT sp_permissions_write;	
+			 ROLLBACK	TO SAVEPOINT sp_permissions_create;	
 		END	IF;
 
 		CALL sp_handle_error_diagnostic(@sqlstate, @errno, @text,	log_msgs,	procedure_name,	result);
@@ -56,8 +56,8 @@ BEGIN
   --
   -- Temp tables
   --
-  DROP TEMPORARY TABLE IF EXISTS response___sp_permissions_write;
-  CREATE TEMPORARY TABLE response___sp_permissions_write 
+  DROP TEMPORARY TABLE IF EXISTS response___sp_permissions_create;
+  CREATE TEMPORARY TABLE response___sp_permissions_create 
     SELECT * FROM permissions p LIMIT 0;
 
 
@@ -82,7 +82,7 @@ BEGIN
 	-- Start Tran	or Savepoint
 	--
 	IF within_tran THEN
-		SAVEPOINT	sp_permissions_write;
+		SAVEPOINT	sp_permissions_create;
 	ELSE 
 		START	TRANSACTION;
 		SET	tran_started = TRUE;
@@ -149,7 +149,7 @@ BEGIN
   -- 
   -- Get final result
   --
-  INSERT INTO response___sp_permissions_write (name, description)
+  INSERT INTO response___sp_permissions_create (name, description)
   SELECT
     name,
     description
@@ -160,7 +160,7 @@ BEGIN
 
 
   
-  SELECT COUNT(*) FROM response___sp_permissions_write r INTO v_count;
+  SELECT COUNT(*) FROM response___sp_permissions_create r INTO v_count;
   SELECT JSON_SET(result, '$.recordCount', v_count) INTO result;
 
 
@@ -171,7 +171,7 @@ BEGIN
   SELECT
     r.name,
     r.description
-  FROM response___sp_permissions_write r;
+  FROM response___sp_permissions_create r;
 
 
 
