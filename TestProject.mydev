@@ -18,13 +18,13 @@
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error_diagnostic.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error_proc.sql" />
+    <File RelPath="Procedures" Link=".\Procedures\sp_permissions_create.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_delete.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_group_delete.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_group_readlist.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_group_write.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_read.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_readlist.sql" />
-    <File RelPath="Procedures" Link=".\Procedures\sp_permissions_write.sql" />
     <File RelPath="Procedures" Link=".\Scripts\sp_tran_test1.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_tran_test1_2.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_user_write.sql" />
@@ -62,7 +62,6 @@
         <File RelPath="Tables" Name="permissions_group.sql" BuildAction="Build" />
         <File RelPath="Tables" Name="error_log.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_handle_error.sql" BuildAction="Build" />
-        <File RelPath="Procedures" Name="sp_permissions_write.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_permissions_read.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_permissions_delete.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_groups_readlist.sql" BuildAction="Build" />
@@ -85,6 +84,7 @@
         <File RelPath="Procedures" Name="sp_permissions_group_readlist.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_user_write.sql" BuildAction="Build" />
         <File RelPath="Functions" Name="fn_is_numeric.sql" BuildAction="Build" />
+        <File RelPath="Procedures" Name="sp_permissions_create.sql" BuildAction="Build" />
         <File RelPath="" Name="PostDeployment.sql" BuildAction="Build" />
       </Build>
     </Configuration>
