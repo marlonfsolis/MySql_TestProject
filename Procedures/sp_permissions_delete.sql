@@ -90,7 +90,7 @@ BEGIN
   --
   IF IFNULL(name,'')='' THEN
     SIGNAL SQLSTATE '12345'
-      SET MESSAGE_TEXT = 'The field name is required.';
+      SET MESSAGE_TEXT = '400|The field name is required.';
      
   END IF;
   
@@ -98,7 +98,7 @@ BEGIN
     SELECT 1 FROM permissions p WHERE p.name = name
   ) THEN
     SIGNAL SQLSTATE '12345'
-      SET MESSAGE_TEXT = 'The permission was not found.';
+      SET MESSAGE_TEXT = '404|The permission was not found.';
      
   END IF;
   
