@@ -3,7 +3,8 @@
 <!-- Modifying this generated file will probably render it invalid -->
 <Options Version="3.0">
   <Documents>
-    <Document Moniker=".\Scripts\Temp 1.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
+    <Document Moniker=".\Scripts\Temp 1.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" Active="True" />
+    <Document Moniker=".\Procedures\sp_permissions_update.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
   </Documents>
   <Services>
     <Service GUID="{c7b76517-6978-4a0b-8d38-57b7f7223edb}">
@@ -23,7 +24,18 @@
       </Persist>
     </Service>
     <Service GUID="{811fba21-97c2-44b6-8c1c-eae1f1315f2d}">
-      <Persist />
+      <Persist>
+        <Bookmarks>
+          <Document Moniker="C:\Projects\MySql\MySql_TestProject\Procedures\sp_permissions_update.sql">
+            <Bookmark Line="13" Character="5" />
+            <Bookmark Line="69" Character="46" />
+            <Bookmark Line="69" Character="64" />
+            <Bookmark Line="109" Character="16" />
+            <Bookmark Line="121" Character="16" />
+            <Bookmark Line="122" Character="16" />
+          </Document>
+        </Bookmarks>
+      </Persist>
     </Service>
   </Services>
 </Options>

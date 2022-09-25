@@ -135,15 +135,6 @@
 
 
 --
--- Stored procedure call
---
--- CALL sp_permissions_create('Permission4','Permission 4', @result);
--- SELECT @result;
--- SELECT * FROM my_temp_tbl mtt;
-
-
-
---
 -- JSON playing
 --
 
@@ -236,8 +227,11 @@
 
 
 --
--- Procedures calls
---
+-- Stored procedure call
+
+-- CALL sp_permissions_update('Permission7', '{"name":"Permission71", "description":"Permission 71"}', @result);
+-- SELECT @result;
+
 
 -- CALL sp_permissions_delete('Permission4', TRUE, @Out_Param);
 -- SELECT @Out_Param;
@@ -259,38 +253,38 @@
 -- CALL sp_error_log_truncate();
 
 
-CALL sp_groups_readlist(0, 0, NULL, NULL, @result);
-SELECT @result;
+-- CALL sp_groups_readlist(0, 0, NULL, NULL, @result);
+-- SELECT @result;
 
 
-CALL sp_groups_read('Group1', @result);
-SELECT @result;
+-- CALL sp_groups_read('Group1', @result);
+-- SELECT @result;
 
 
-CALL sp_groups_write('{"name":"Group3", "description":"Group 3"}', @result);
-SELECT @result;
+-- CALL sp_groups_write('{"name":"Group3", "description":"Group 3"}', @result);
+-- SELECT @result;
 
 
-CALL sp_groups_delete('Group3', @result);
-SELECT @result;
+-- CALL sp_groups_delete('Group3', @result);
+-- SELECT @result;
 
 
-CALL sp_groups_readlist(0, 0, NULL, NULL, @result);
-CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
-SELECT pg.group_name,pg.permission_name FROM permissions_groups pg;
-DELETE FROM permissions_groups WHERE group_name = 'Group3';
+-- CALL sp_groups_readlist(0, 0, NULL, NULL, @result);
+-- CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
+-- SELECT pg.group_name,pg.permission_name FROM permissions_groups pg;
+-- DELETE FROM permissions_groups WHERE group_name = 'Group3';
 
-CALL sp_permissions_group_write('{"group":"Group3", "permissions":["Permission3", "Permission4", "Permission5"]}', @result);
-SELECT @result;
-
-CALL sp_permissions_group_delete('{"group":"Group3", "permissions":["Permission3", "Permission4"]}', @result);
-CALL sp_permissions_group_delete('{"group":"Group3", "permissions":["Permission3", "Permission4", "Permission5"]}', @result);
-SELECT @result;
-
-CALL sp_permissions_group_readlist(0, 10, 
-   '{"group_name":"Group1", "permission_name":null}', 
-   '{"group_name":null, "permission_name":null}', @result);
-SELECT @result;
+-- CALL sp_permissions_group_write('{"group":"Group3", "permissions":["Permission3", "Permission4", "Permission5"]}', @result);
+-- SELECT @result;
+-- 
+-- CALL sp_permissions_group_delete('{"group":"Group3", "permissions":["Permission3", "Permission4"]}', @result);
+-- CALL sp_permissions_group_delete('{"group":"Group3", "permissions":["Permission3", "Permission4", "Permission5"]}', @result);
+-- SELECT @result;
+-- 
+-- CALL sp_permissions_group_readlist(0, 10, 
+--    '{"group_name":"Group1", "permission_name":null}', 
+--    '{"group_name":null, "permission_name":null}', @result);
+-- SELECT @result;
 
 
 

@@ -25,6 +25,7 @@
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_group_write.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_read.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_readlist.sql" />
+    <File RelPath="Procedures" Link=".\Procedures\sp_permissions_update.sql" />
     <File RelPath="Procedures" Link=".\Scripts\sp_tran_test1.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_tran_test1_2.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_user_write.sql" />
@@ -85,6 +86,7 @@
         <File RelPath="Procedures" Name="sp_user_write.sql" BuildAction="Build" />
         <File RelPath="Functions" Name="fn_is_numeric.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_permissions_create.sql" BuildAction="Build" />
+        <File RelPath="Procedures" Name="sp_permissions_update.sql" BuildAction="Build" />
         <File RelPath="" Name="PostDeployment.sql" BuildAction="Build" />
       </Build>
     </Configuration>
