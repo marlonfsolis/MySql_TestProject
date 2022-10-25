@@ -261,8 +261,12 @@
 -- SELECT @result;
 
 
--- CALL sp_groups_write('{"name":"Group3", "description":"Group 3"}', @result);
+-- CALL sp_groups_create('{"name":"Group3", "description":"Group 3"}', @result);
 -- SELECT @result;
+
+
+CALL sp_groups_update('Group3', '{"name":"Group3.1", "description":"Group 3.1"}', @result);
+SELECT @result;
 
 
 -- CALL sp_groups_delete('Group3', @result);
