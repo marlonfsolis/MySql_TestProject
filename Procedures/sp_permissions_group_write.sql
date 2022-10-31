@@ -2,13 +2,13 @@
 -- Created on: 9/5/2022 
 -- Description: Assing one or more permissions to a group.
 --
--- CALL sp_permissions_group_write('{"group":"Group1", "permissions":["Permission1"]}', @result);
+-- CALL sp_permissions_group_create('{"group":"Group1", "permissions":["Permission1"]}', @result);
 -- SELECT @result;
 -- 
 
-DROP PROCEDURE IF EXISTS sp_permissions_group_write;
+DROP PROCEDURE IF EXISTS sp_permissions_group_create;
 DELIMITER $$
-CREATE PROCEDURE sp_permissions_group_write
+CREATE PROCEDURE sp_permissions_group_create
 (
   IN p_json json,
   OUT result json
@@ -18,7 +18,7 @@ BEGIN
   --
   -- Variables
   --
-  DECLARE procedure_name varchar(100) DEFAULT 'sp_permissions_group_write';
+  DECLARE procedure_name varchar(100) DEFAULT 'sp_permissions_group_create';
   DECLARE error_msg varchar(1000) DEFAULT '';
   DECLARE error_log_id int DEFAULT 0;
   DECLARE v_count int DEFAULT 0;
@@ -43,13 +43,13 @@ BEGIN
       @errno = MYSQL_ERRNO,
       @text = MESSAGE_TEXT;
 
-	IF tran_started	THEN
-		ROLLBACK;
-	ELSE
-		 ROLLBACK TO SAVEPOINT sp_permissions_group_write;	
-	END	IF;
-
-	CALL sp_handle_error_diagnostic(@sqlstate, @errno, @text,	log_msgs,	procedure_name,	result);
+  	IF tran_started	THEN
+  		ROLLBACK;
+  	ELSE
+  		 ROLLBACK TO SAVEPOINT sp_permissions_group_create;	
+  	END	IF;
+  
+  	CALL sp_handle_error_diagnostic(@sqlstate, @errno, @text,	log_msgs,	procedure_name,	result);
 
   END;
 
@@ -57,8 +57,8 @@ BEGIN
   --
   -- Temp tables
   --
-  DROP TEMPORARY TABLE IF EXISTS response___sp_permissions_group_write;
-  CREATE TEMPORARY TABLE response___sp_permissions_group_write 
+  DROP TEMPORARY TABLE IF EXISTS response___sp_permissions_group_create;
+  CREATE TEMPORARY TABLE response___sp_permissions_group_create 
     SELECT 
       gr.name AS group_name, 
       p.name AS permission_name 
@@ -95,7 +95,7 @@ BEGIN
   -- Start Tran	or Savepoint
   --
   IF within_tran THEN
-	SAVEPOINT sp_permissions_group_write;
+	SAVEPOINT sp_permissions_group_create;
   ELSE 
 	START TRANSACTION;
 	SET	tran_started = TRUE;
@@ -192,7 +192,7 @@ BEGIN
   -- 
   -- Get final result
   --
-  INSERT INTO response___sp_permissions_group_write (group_name, permission_name)
+  INSERT INTO response___sp_permissions_group_create (group_name, permission_name)
   SELECT
     group_name,
     permission_name
@@ -204,7 +204,7 @@ BEGIN
 
 
   
-  SELECT COUNT(*) FROM response___sp_permissions_group_write r INTO v_count;
+  SELECT COUNT(*) FROM response___sp_permissions_group_create r INTO v_count;
   SELECT JSON_SET(result, '$.recordCount', v_count) INTO result;
 
 
@@ -214,7 +214,7 @@ BEGIN
   SELECT
     r.group_name,
     r.permission_name
-  FROM response___sp_permissions_group_write r;
+  FROM response___sp_permissions_group_create r;
   
 
   IF tran_started THEN

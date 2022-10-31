@@ -273,8 +273,8 @@
 -- SELECT @result;
 
 
--- CALL sp_groups_readlist(0, 0, NULL, NULL, @result);
--- CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
+CALL sp_groups_readlist(0, 0, NULL, NULL, @result);
+CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
 -- SELECT pg.group_name,pg.permission_name FROM permissions_groups pg;
 -- DELETE FROM permissions_groups WHERE group_name = 'Group3';
 
