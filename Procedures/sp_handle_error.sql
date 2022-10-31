@@ -56,16 +56,14 @@ BEGIN
     INTO error_logid;
 
 
-  CALL sys.table_exists('AppTemplateDb', 'log_message', @table_type);
-  IF @table_type != '' THEN
-    INSERT INTO error_log_trace (error_logid, trace_message, trace_date)
-      SELECT 
-        error_logid,
-        lm.log_msg,
-        lm.log_date
-      FROM log_message lm;    
 
-  END IF;
+  INSERT INTO error_log_trace (error_logid, trace_message, trace_date)
+    SELECT 
+      error_logid,
+      lm.log_msg,
+      lm.log_date
+    FROM log_message lm;    
+
 
   
 
