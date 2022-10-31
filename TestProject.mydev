@@ -18,7 +18,6 @@
     <File RelPath="Procedures" Link=".\Procedures\sp_groups_update.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error_diagnostic.sql" />
-    <File RelPath="Procedures" Link=".\Procedures\sp_handle_error_proc.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_create.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_delete.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_group_delete.sql" />
@@ -71,7 +70,6 @@
         <File RelPath="Procedures" Name="sp_error_log_readlist.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_error_log_truncate.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_handle_error_diagnostic.sql" BuildAction="Build" />
-        <File RelPath="Procedures" Name="sp_handle_error_proc.sql" BuildAction="Build" />
         <File RelPath="Functions" Name="fn_add_log_message.sql" BuildAction="Build" />
         <File RelPath="Scripts" Name="Temp 2.sql" BuildAction="Build" />
         <File RelPath="Scripts" Name="Temp 3.sql" BuildAction="Build" />

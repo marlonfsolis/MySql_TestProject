@@ -3,9 +3,8 @@
 <!-- Modifying this generated file will probably render it invalid -->
 <Options Version="3.0">
   <Documents>
-    <Document Moniker=".\Scripts\Temp 1.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" Active="True" />
-    <Document Moniker=".\Procedures\sp_groups_create.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
-    <Document Moniker=".\Procedures\sp_groups_update.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
+    <Document Moniker=".\Scripts\Temp 1.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
+    <Document Moniker=".\Procedures\sp_permissions_create.sql" ActiveView="Code" Factory="{3586cc08-aeb7-47f4-a38f-1700741266f6}" />
   </Documents>
   <Services>
     <Service GUID="{c7b76517-6978-4a0b-8d38-57b7f7223edb}">
@@ -25,36 +24,7 @@
       </Persist>
     </Service>
     <Service GUID="{811fba21-97c2-44b6-8c1c-eae1f1315f2d}">
-      <Persist>
-        <Bookmarks>
-          <Document Moniker="C:\Projects\MySql\MySql_TestProject\Procedures\sp_groups_update.sql">
-            <Bookmark Line="4" Character="28" />
-            <Bookmark Line="61" Character="18" />
-            <Bookmark Line="99" Character="44" />
-            <Bookmark Line="103" Character="18" />
-            <Bookmark Line="103" Character="43" />
-            <Bookmark Line="121" Character="27" />
-            <Bookmark Line="133" Character="12" />
-            <Bookmark Line="135" Character="44" />
-            <Bookmark Line="141" Character="9" />
-            <Bookmark Line="142" Character="13" />
-            <Bookmark Line="142" Character="20" />
-            <Bookmark Line="143" Character="11" />
-            <Bookmark Line="147" Character="40" />
-            <Bookmark Line="156" Character="12" />
-            <Bookmark Line="158" Character="9" />
-            <Bookmark Line="159" Character="11" />
-            <Bookmark Line="159" Character="18" />
-            <Bookmark Line="161" Character="11" />
-            <Bookmark Line="168" Character="43" />
-            <Bookmark Line="170" Character="4" />
-            <Bookmark Line="172" Character="7" />
-            <Bookmark Line="173" Character="11" />
-            <Bookmark Line="173" Character="18" />
-            <Bookmark Line="188" Character="6" />
-          </Document>
-        </Bookmarks>
-      </Persist>
+      <Persist />
     </Service>
   </Services>
 </Options>
