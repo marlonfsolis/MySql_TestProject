@@ -237,7 +237,7 @@
 -- SELECT @Out_Param;
 
 
--- CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
+CALL sp_permissions_readlist(0, 0, NULL, NULL, NULL);
 -- SELECT @result;
 
 
@@ -331,6 +331,9 @@ CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
 -- 
 -- CALL run_test();
 
+
+
+CALL sp_multiple_results();
 
 
 

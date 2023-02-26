@@ -2,7 +2,7 @@
 -- Get permissions list.
 -- The list can be filteres and paginated.
 --
--- CALL sp_Permission_Read(0, 10, '{"name":"Permission1"}', '{"description":"%"}', @result);
+-- CALL sp_permissions_readlist(0, 10, '{"name":"Permission1"}', '{"description":"%"}', @result);
 -- SELECT @result;
 -- 
 
@@ -62,7 +62,7 @@ BEGIN
   --
   -- Log the parameter values passed
   --
-	SELECT fn_add_log_message(log_msgs, 'ParameterList:') INTO log_msgs;
+  SELECT fn_add_log_message(log_msgs, 'ParameterList:') INTO log_msgs;
   SELECT fn_add_log_message(log_msgs, CONCAT('offsetRows: ', IFNULL(CAST(offsetRows AS CHAR), 'NULL'))) INTO log_msgs;
   SELECT fn_add_log_message(log_msgs, CONCAT('fetchRows: ', IFNULL(CAST(fetchRows AS char(20)), 'NULL'))) INTO log_msgs;
   SELECT fn_add_log_message(log_msgs, CONCAT('filterJson: ', IFNULL(filterJson, 'NULL'))) INTO log_msgs;

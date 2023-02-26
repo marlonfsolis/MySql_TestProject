@@ -18,6 +18,7 @@
     <File RelPath="Procedures" Link=".\Procedures\sp_groups_update.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error_diagnostic.sql" />
+    <File RelPath="Procedures" Link=".\Procedures\sp_multiple_results.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_create.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_delete.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_group_delete.sql" />
@@ -87,6 +88,7 @@
         <File RelPath="Procedures" Name="sp_permissions_update.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_groups_create.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_groups_update.sql" BuildAction="Build" />
+        <File RelPath="Procedures" Name="sp_multiple_results.sql" BuildAction="Build" />
         <File RelPath="" Name="PostDeployment.sql" BuildAction="Build" />
       </Build>
     </Configuration>

@@ -1,7 +1,7 @@
 ﻿--
--- Create table `permissions`
+-- Create table `permission`
 --
-CREATE TABLE permissions (
+CREATE TABLE permission (
   name VARCHAR(100) NOT NULL,
   description VARCHAR(1000) DEFAULT NULL,
   

@@ -1,7 +1,7 @@
 ﻿--
--- Create table `groups_roles`
+-- Create table `role`
 --
-CREATE TABLE groups_roles(
+CREATE TABLE role(
   name varchar(100) NOT NULL,
   description varchar(1000),
   
@@ -10,5 +10,3 @@ CREATE TABLE groups_roles(
 ENGINE = INNODB,
 CHARACTER SET utf8mb4,
 COLLATE utf8mb4_0900_ai_ci;
-
-
