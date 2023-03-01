@@ -12,7 +12,7 @@ DELIMITER $$
 CREATE PROCEDURE sp_handle_error 
 (
   IN error_msg text,
-  IN error_detail text,
+  IN detail text,
   IN stack_trace text,
   IN procedure_name varchar(100),
   INOUT result json
@@ -22,7 +22,7 @@ BEGIN
   --
   -- Variables
   --
-  DECLARE error_detail longtext DEFAULT NULL;
+  DECLARE detail longtext DEFAULT NULL;
   DECLARE error_logid int DEFAULT 0;
 
 
@@ -49,15 +49,15 @@ BEGIN
   --
   -- Log the error
   --
-	INSERT INTO error_log (error_message, error_detail, stack_trace, error_date)
-		VALUES (error_msg, error_detail, stack_trace, NOW());
+	INSERT INTO error_log (message, detail, stack_trace, error_date)
+		VALUES (error_msg, detail, stack_trace, NOW());
 
   SELECT LAST_INSERT_ID()
     INTO error_logid;
 
 
 
-  INSERT INTO error_log_trace (error_logid, trace_message, trace_date)
+  INSERT INTO error_log_trace (error_logid, message, trace_date)
     SELECT 
       error_logid,
       lm.log_msg,

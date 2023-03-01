@@ -1,9 +1,9 @@
 ﻿-- USE AppTemplateDb;
 -- 
 -- 
--- SELECT * FROM permissions p;
--- SELECT * FROM groups_roles gr;
--- SELECT * FROM permissions_groups pg;
+-- SELECT * FROM permission p;
+-- SELECT * FROM role gr;
+-- SELECT * FROM permission_role pg;
 
 
 --
@@ -12,15 +12,15 @@
 -- https://dev.mysql.com/doc/refman/8.0/en/information-functions.html#function_found-rows
 -- Use temp table and then count the rows on it.
 --
--- SELECT * FROM permissions p;
+-- SELECT * FROM permission p;
 -- SELECT
 --   FOUND_ROWS();
 
 --
 -- ROW_COUNT() - Row number affected by the last update
 --
--- UPDATE permissions p SET p.description = CONCAT(p.description, '_');
--- UPDATE permissions p SET p.description = REPLACE(p.description,'_','');
+-- UPDATE permission p SET p.description = CONCAT(p.description, '_');
+-- UPDATE permission p SET p.description = REPLACE(p.description,'_','');
 -- SELECT 
 --   ROW_COUNT();
 
@@ -28,14 +28,14 @@
 
 -- 
 -- DELETE 
---   FROM permissions
+--   FROM permission
 -- WHERE permission_id = -1
 -- ;
 -- 
 
 
 -- 
--- INSERT LOW_PRIORITY IGNORE INTO permissions (name, description)
+-- INSERT LOW_PRIORITY IGNORE INTO permission (name, description)
 --   SELECT
 --     'Permission1' AS name,
 --     'Permission 1' AS description
@@ -49,15 +49,15 @@
 -- ;
 -- 
 -- 
--- INSERT INTO permissions (name, description)
+-- INSERT INTO permission (name, description)
 --   VALUES ('Permission3', 'Permission 3')
 -- ;
 
--- INSERT DELAYED INTO permissions
+-- INSERT DELAYED INTO permission
 --   SET name = 'String1',
 --       description = 'description';
--- SELECT * FROM permissions p;
--- DELETE FROM permissions WHERE name = 'String1';
+-- SELECT * FROM permission p;
+-- DELETE FROM permission WHERE name = 'String1';
 
 
 
@@ -65,12 +65,12 @@
 -- 
 -- -- Updating
 --
--- UPDATE permissions p 
--- SET name = 'Edit Permissions',
---     description = 'Can edit permissions.'
+-- UPDATE permission p 
+-- SET name = 'Edit permission',
+--     description = 'Can edit permission.'
 -- WHERE permission_id = 6
 -- ;
--- SELECT * FROM permissions p;
+-- SELECT * FROM permission p;
 -- 
 -- 
 -- 
@@ -87,20 +87,20 @@
 --
 -- DROP TABLE IF EXISTS my_temp_tbl CASCADE;
 -- CREATE TEMPORARY TABLE my_temp_tbl(name varchar(100));
--- CREATE TEMPORARY TABLE my_temp_tbl SELECT * FROM permissions p LIMIT 0;
+-- CREATE TEMPORARY TABLE my_temp_tbl SELECT * FROM permission p LIMIT 0;
 -- DESCRIBE my_temp_tbl;
 -- SELECT * FROM my_temp_tbl mtt;
--- SELECT * FROM permissions p;
--- SELECT * FROM permissions_groups pg;
+-- SELECT * FROM permission p;
+-- SELECT * FROM permission_role pg;
 -- 
 -- 
 -- 
--- INSERT INTO permissions_groups (permission_name, group_name)
+-- INSERT INTO permission_role (permission_name, group_name)
 --   VALUES ('Permission1', 'Group1')
 -- ;
 -- 
 -- DELETE
---   FROM permissions_groups
+--   FROM permission_role
 -- WHERE permission_name = 'Permission1'
 --   AND group_name = 'Group1'
 -- LIMIT 1
@@ -110,7 +110,7 @@
 /* Rank */
 -- 
 -- SELECT *
---   FROM permissions_groups pg
+--   FROM permission_role pg
 -- WHERE pg.permission_name = 'Permission1'
 --   AND pg.group_name = 'Group1'
 -- ;
@@ -122,14 +122,14 @@
 --     pg.permission_name,
 --     pg.group_name) AS rank_num
 -- 
--- FROM permissions_groups pg
+-- FROM permission_role pg
 -- ;
 
 -- SELECT
 --   pg.permission_name,
 --   pg.group_name,
 --   RANK() OVER (ORDER BY pg.permission_name) AS rank_num
--- FROM permissions_groups pg
+-- FROM permission_role pg
 -- ;
 
 
@@ -175,8 +175,8 @@
 --     ) 
 --   ) AS jt;
 
--- SET @j = '{"group":"Group1", "permissions":["Permission1", "Permission2", "Permission3"]}';
--- SET @arr = JSON_VALUE(@j,'$.permissions');
+-- SET @j = '{"group":"Group1", "permission":["Permission1", "Permission2", "Permission3"]}';
+-- SET @arr = JSON_VALUE(@j,'$.permission');
 -- SELECT * 
 -- FROM JSON_TABLE(@arr, '$[*]' COLUMNS(
 --      permission varchar(100) PATH '$'
@@ -229,23 +229,23 @@
 --
 -- Stored procedure call
 
--- CALL sp_permissions_update('Permission7', '{"name":"Permission71", "description":"Permission 71"}', @result);
+-- CALL sp_permission_update('Permission7', '{"name":"Permission71", "description":"Permission 71"}', @result);
 -- SELECT @result;
 
 
--- CALL sp_permissions_delete('Permission4', TRUE, @Out_Param);
+-- CALL sp_permission_delete('Permission4', TRUE, @Out_Param);
 -- SELECT @Out_Param;
 
 
-CALL sp_permissions_readlist(0, 0, NULL, NULL, NULL);
+CALL sp_permission_readlist(0, 0, NULL, NULL, NULL);
 -- SELECT @result;
 
 
--- CALL sp_permissions_read('Permission1', @result);
+-- CALL sp_permission_read('Permission1', @result);
 -- SELECT @result;
 
 
--- CALL sp_permissions_create('{"name":"Permission5", "description":"Permission 5"}', @result);
+-- CALL sp_permission_create('{"name":"Permission5", "description":"Permission 5"}', @result);
 -- SELECT @result;
 
 
@@ -274,15 +274,15 @@ CALL sp_permissions_readlist(0, 0, NULL, NULL, NULL);
 
 
 CALL sp_groups_readlist(0, 0, NULL, NULL, @result);
-CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
--- SELECT pg.group_name,pg.permission_name FROM permissions_groups pg;
--- DELETE FROM permissions_groups WHERE group_name = 'Group3';
+CALL sp_permission_readlist(0, 0, NULL, NULL, @result);
+-- SELECT pg.group_name,pg.permission_name FROM permission_role pg;
+-- DELETE FROM permission_role WHERE group_name = 'Group3';
 
--- CALL sp_permissions_group_write('{"group":"Group3", "permissions":["Permission3", "Permission4", "Permission5"]}', @result);
+-- CALL sp_permissions_group_write('{"group":"Group3", "permission":["Permission3", "Permission4", "Permission5"]}', @result);
 -- SELECT @result;
 -- 
--- CALL sp_permissions_group_delete('{"group":"Group3", "permissions":["Permission3", "Permission4"]}', @result);
--- CALL sp_permissions_group_delete('{"group":"Group3", "permissions":["Permission3", "Permission4", "Permission5"]}', @result);
+-- CALL sp_permissions_group_delete('{"group":"Group3", "permission":["Permission3", "Permission4"]}', @result);
+-- CALL sp_permissions_group_delete('{"group":"Group3", "permission":["Permission3", "Permission4", "Permission5"]}', @result);
 -- SELECT @result;
 -- 
 -- CALL sp_permissions_group_readlist(0, 10, 
@@ -293,7 +293,7 @@ CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
 
 
 
--- SELECT * FROM error_log el ORDER BY el.error_detail DESC;
+-- SELECT * FROM error_log el ORDER BY el.detail DESC;
 -- SELECT * FROM error_log_trace elt ORDER BY elt.trace_date DESC;
 -- CALL sp_error_log_readlist(0, 1, NULL, NULL);
 -- CALL sp_error_log_truncate();
@@ -322,10 +322,10 @@ CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
 
 -- CALL sp_tran_test1(@error_code);
 -- 
--- CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
+-- CALL sp_permission_readlist(0, 0, NULL, NULL, @result);
 -- SELECT @result;
 -- 
--- CALL sp_permissions_delete('Permission6', TRUE, @Out_Param);
+-- CALL sp_permission_delete('Permission6', TRUE, @Out_Param);
 -- SELECT @Out_Param;
 -- 
 -- 

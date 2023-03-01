@@ -42,7 +42,7 @@ BEGIN
   --
   -- Do stuff
   --
-  INSERT INTO permissions
+  INSERT INTO permission
     SET name = 'Permission6',
         description = 'Permission 6';  
 

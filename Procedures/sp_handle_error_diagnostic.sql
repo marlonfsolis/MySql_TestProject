@@ -23,7 +23,7 @@ BEGIN
   --
   -- Variables
   --
-  DECLARE error_detail text DEFAULT NULL;
+  DECLARE detail text DEFAULT NULL;
   DECLARE error_logid int DEFAULT 0;
 
 
@@ -55,7 +55,7 @@ BEGIN
       ' - MYSQL_ERRNO: ', errno, 
       ' - RETURNED_SQLSTATE:', sql_state, 
       ' - MESSAGE_TEXT: ', error_msg)
-    INTO error_detail;
+    INTO detail;
 
   SELECT CONCAT(procedure_name, ' - ', error_msg) 
     INTO error_msg;
@@ -64,17 +64,17 @@ BEGIN
   --
   -- Log the error
   --
-	INSERT INTO error_log (error_message, error_detail, stack_trace, error_date)
-		VALUES (error_msg, error_detail, NULL, NOW());
+	INSERT INTO error_log (message, detail, stack_trace, error_date)
+		VALUES (error_msg, detail, NULL, NOW());
 
   SELECT LAST_INSERT_ID()
     INTO error_logid;
 
 
-  INSERT INTO error_log_trace (error_logid, trace_message, trace_date)
+  INSERT INTO error_log_trace (error_logid, message, trace_date)
   SELECT 
     error_logid AS 'error_logid',
-    jt.msg AS 'trace_message',
+    jt.msg AS 'message',
     IFNULL(jt.date,NOW()) AS 'trace_date'
   FROM JSON_TABLE(log_msg, '$[*]' COLUMNS(
     msg text PATH '$.msg',

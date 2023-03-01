@@ -62,9 +62,9 @@ BEGIN
     SELECT 
       gr.name AS group_name, 
       p.name AS permission_name 
-    FROM permissions p
-    INNER JOIN permissions_groups pg ON p.name = pg.permission_name
-    INNER JOIN groups_roles gr ON p.name = gr.name
+    FROM permission p
+    INNER JOIN permission_role pg ON p.name = pg.permission_name
+    INNER JOIN role gr ON p.name = gr.name
     LIMIT 0;
 
   DROP TEMPORARY TABLE IF EXISTS permission_names;
@@ -143,7 +143,7 @@ BEGIN
   
   IF NOT EXISTS (
     SELECT 1 
-    FROM groups_roles gr 
+    FROM role gr 
     WHERE gr.name = group_name
   ) 
   THEN
@@ -156,7 +156,7 @@ BEGIN
     SELECT
       1
     FROM permission_names pn
-    LEFT JOIN permissions p ON p.name = pn.p_name
+    LEFT JOIN permission p ON p.name = pn.p_name
     WHERE p.name IS NULL 
   ) THEN
     SIGNAL SQLSTATE '12345'
@@ -171,7 +171,7 @@ BEGIN
   WHERE EXISTS(
     SELECT
       1
-    FROM permissions_groups pg
+    FROM permission_role pg
     WHERE pg.group_name = group_name
     AND pg.permission_name = pn.p_name
   );
@@ -183,7 +183,7 @@ BEGIN
   -- 
   -- Asign permissions to group
   --
-  INSERT INTO permissions_groups (permission_name, group_name)
+  INSERT INTO permission_role (permission_name, group_name)
     SELECT
       pn.p_name,
       group_name
@@ -196,7 +196,7 @@ BEGIN
   SELECT
     group_name,
     permission_name
-  FROM permissions_groups pg
+  FROM permission_role pg
   WHERE pg.group_name = group_name;
 
  

@@ -57,7 +57,7 @@ BEGIN
   CALL sp_tran_test1_2(FALSE, error_code);
 
   -- Here we do not rolled bac yet. We should have values
---   CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
+--   CALL sp_permission_readlist(0, 0, NULL, NULL, @result);
   
 
   -- Handle error

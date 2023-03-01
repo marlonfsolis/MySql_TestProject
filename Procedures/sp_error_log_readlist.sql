@@ -10,8 +10,8 @@ DROP PROCEDURE IF EXISTS sp_error_log_readlist;
 DELIMITER $$
 CREATE PROCEDURE sp_error_log_readlist
 (
-  IN offsetRows int,
-  IN fetchRows int,
+  IN offset_rows int,
+  IN fetch_rows int,
   IN filterJson json,
   IN searchJson json
 ) 
@@ -22,7 +22,7 @@ BEGIN
   --
 
   -- filters
-  DECLARE errorlogid_filter int;
+  DECLARE error_log_id_filter int;
   -- searchs
   DECLARE errormsg_search varchar(1000);
 
@@ -33,7 +33,7 @@ BEGIN
   DROP TABLE IF EXISTS errors__sp_error_log_readlist;
   CREATE TEMPORARY TABLE errors__sp_error_log_readlist(
     error_logid int,
-    error_message text
+    message text
   );
 
 
@@ -41,12 +41,12 @@ BEGIN
   --
   -- Default values
   --
-  SET offsetRows = IFNULL(offsetRows, 0);
-  SET fetchRows = IFNULL(fetchRows, 10);
+  SET offset_rows = IFNULL(offset_rows, 0);
+  SET fetch_rows = IFNULL(fetch_rows, 10);
   
-  IF fetchRows = 0 THEN
+  IF fetch_rows = 0 THEN
     SELECT
-      COUNT(1) INTO fetchRows
+      COUNT(1) INTO fetch_rows
     FROM error_log el;
   END IF;  
   IF JSON_VALID(filterJson) = 0 THEN
@@ -61,7 +61,7 @@ BEGIN
   --
   -- Get filter values
   --
-  SELECT JSON_VALUE (filterJson, '$.errorLogId') INTO errorlogid_filter;
+  SELECT JSON_VALUE (filterJson, '$.errorLogId') INTO error_log_id_filter;
 
 
   --
@@ -74,20 +74,20 @@ BEGIN
   -- 
   -- Get errors result
   --
-  INSERT INTO errors__sp_error_log_readlist (error_logid, error_message)
+  INSERT INTO errors__sp_error_log_readlist (error_logid, message)
   SELECT
     el.error_logid,
-    el.error_message
+    el.message
   FROM error_log el
   
   -- filter
-  WHERE (errorlogid_filter IS NULL OR errorlogid_filter = el.error_logid)
+  WHERE (error_log_id_filter IS NULL OR el.error_logid = error_log_id_filter)
 
   -- search
-  AND (errormsg_search IS NULL OR errormsg_search LIKE el.error_message)
+  AND (errormsg_search IS NULL OR errormsg_search LIKE el.message)
   
   ORDER BY el.error_date DESC
-  LIMIT fetchRows OFFSET offsetRows;
+  LIMIT fetch_rows OFFSET offset_rows;
 
 
 
@@ -96,22 +96,22 @@ BEGIN
   --
   SELECT
     el.error_logid,
-    el.error_message,
-    el.error_detail,
+    el.message,
+    el.detail,
     el.stack_trace,
     el.error_date
   FROM error_log el
   INNER JOIN errors__sp_error_log_readlist err
-    ON el.error_logid = err.error_logid;
+    ON el.error_log_id = err.error_logid;
 
 
   --
   -- Get error log trace result
   --
   SELECT
-    elt.error_log_traceid,
+    elt.error_log_trace_id,
     elt.error_logid,
-    elt.trace_message,
+    elt.message,
     elt.trace_date
   FROM error_log_trace elt
   WHERE EXISTS (

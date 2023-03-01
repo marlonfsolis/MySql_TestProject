@@ -15,7 +15,7 @@ BEGIN
 
   -- because we use SAVEPOINT. At this point we have BEEN ROLLED BACK already inside the proc
   -- This have the advantage that we can rollback only the proc with error and continue doint stuff
-  CALL sp_permissions_readlist(0, 0, NULL, NULL, @result); -- use TEMPORARY key word to drop temp tables
+  CALL sp_permission_readlist(0, 0, NULL, NULL, @result); -- use TEMPORARY key word to drop temp tables
 
   IF error_code > 0 THEN
     SELECT 'Rolloing back';
@@ -25,7 +25,7 @@ BEGIN
     COMMIT;
   END IF;
 
-  CALL sp_permissions_readlist(0, 0, NULL, NULL, @result);
+  CALL sp_permission_readlist(0, 0, NULL, NULL, @result);
 
 END
 $$
@@ -39,7 +39,7 @@ DELIMITER $$
 CREATE PROCEDURE permissions_readlist()
 BEGIN
 
- SELECT * FROM permissions;
+ SELECT * FROM permission;
 
 END
 $$

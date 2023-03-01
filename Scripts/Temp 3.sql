@@ -29,7 +29,7 @@ BEGIN
 
     
     IF within_tran THEN
-      ROLLBACK TO sp_tran_test2;
+      ROLLBACK; -- TO sp_tran_test2;
     ELSE
       ROLLBACK;
     END IF;
@@ -59,7 +59,7 @@ BEGIN
         
 --   SET throwerror = 1/0;
 
-  CALL sp_permissions_readlist(0,0,NULL,NULL,@result);
+  CALL sp_permission_readlist(0,0,NULL,NULL,@result);
 
 
   IF NOT within_tran THEN
@@ -106,7 +106,7 @@ BEGIN
     SET error_code = 10;
 
     IF within_tran THEN
-      ROLLBACK TO sp_tran_test3;
+      ROLLBACK; -- TO sp_tran_test3;
     ELSE
       ROLLBACK;
     END IF;
@@ -134,13 +134,13 @@ BEGIN
   
 
 
-  INSERT INTO permissions
+  INSERT INTO permission
     SET name = 'Permission6',
         description = 'Permission 6';
 
 
 
---   INSERT INTO groups_roles
+--   INSERT INTO role
 --     SET name = 'Group4',
 --         description = 'Group 4';
 

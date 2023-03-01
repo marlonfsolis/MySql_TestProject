@@ -59,7 +59,7 @@ BEGIN
   --
   DROP TEMPORARY TABLE IF EXISTS response___sp_groups_update;
   CREATE TEMPORARY TABLE response___sp_groups_update 
-    SELECT * FROM groups_roles gr LIMIT 0;
+    SELECT * FROM role gr LIMIT 0;
 
 
 
@@ -101,7 +101,7 @@ BEGIN
      
   END IF;
   IF NOT EXISTS (
-    SELECT 1 FROM groups_roles gr WHERE gr.name = p_name
+    SELECT 1 FROM role gr WHERE gr.name = p_name
   ) THEN
     SIGNAL SQLSTATE '12345'
       SET MESSAGE_TEXT = '404|The group to be updated was not found.';
@@ -139,7 +139,7 @@ BEGIN
 
   IF EXISTS (
     SELECT 1 
-    FROM groups_roles gr
+    FROM role gr
     WHERE gr.name = v_name
     AND gr.name != p_name
   ) 
@@ -156,7 +156,7 @@ BEGIN
   -- 
   -- Update group
   -- 
-  UPDATE groups_roles gr
+  UPDATE role gr
     SET gr.name = v_name,
         gr.description = v_description
   WHERE gr.name = p_name;
@@ -170,7 +170,7 @@ BEGIN
   SELECT
     name,
     description
-  FROM groups_roles gr
+  FROM role gr
   WHERE gr.name = v_name;
 
   SELECT fn_add_log_message(log_msgs, 'Get final result done') INTO log_msgs;

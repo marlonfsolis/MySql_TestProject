@@ -1,8 +1,8 @@
 ﻿--
 -- Created on: 9/7/2022 
--- Description: Delete one or more permissions from a group.
+-- Description: Delete one or more permission from a group.
 --
--- CALL sp_permissions_group_delete('{"group":"Group1", "permissions":["Permission1"]}', @result);
+-- CALL sp_permissions_group_delete('{"group":"Group1", "permission":["Permission1"]}', @result);
 -- SELECT @result;
 -- 
 
@@ -60,9 +60,9 @@ BEGIN
     SELECT
       gr.name AS group_name,
       p.name AS permission_name
-    FROM groups_roles gr 
-    INNER JOIN permissions_groups pg ON gr.name = pg.group_name
-    INNER JOIN permissions p ON pg.permission_name = p.name
+    FROM role gr 
+    INNER JOIN permission_role pg ON gr.name = pg.group_name
+    INNER JOIN permission p ON pg.permission_name = p.name
     LIMIT 0;
 
   DROP TEMPORARY TABLE IF EXISTS permission_names;
@@ -114,7 +114,7 @@ BEGIN
   --
   SELECT
     JSON_VALUE(p_json, '$.group'),
-    JSON_VALUE(p_json, '$.permissions')
+    JSON_VALUE(p_json, '$.permission')
   INTO group_name, permission_names_json;
 
 
@@ -140,7 +140,7 @@ BEGIN
 
   IF NOT EXISTS (
     SELECT 1 
-    FROM groups_roles gr 
+    FROM role gr 
     WHERE gr.name = group_name
   ) 
   THEN
@@ -153,7 +153,7 @@ BEGIN
     SELECT
       1
     FROM permission_names pn
-    LEFT JOIN permissions p ON p.name = pn.p_name
+    LEFT JOIN permission p ON p.name = pn.p_name
     WHERE p.name IS NULL 
   ) THEN
     SIGNAL SQLSTATE '12345'
@@ -168,10 +168,10 @@ BEGIN
 
 
   -- 
-  -- Then delete groups_roles gr
+  -- Then delete role gr
   --
   DELETE pg
-    FROM permissions_groups pg
+    FROM permission_role pg
     INNER JOIN permission_names pn ON pg.permission_name = pn.p_name
     WHERE pg.group_name = group_name;
 
@@ -186,7 +186,7 @@ BEGIN
   SELECT
     pg.group_name,
     pg.permission_name
-  FROM permissions_groups pg
+  FROM permission_role pg
   WHERE pg.group_name = group_name;
 
   SELECT fn_add_log_message(log_msgs, 'Get return values done') INTO log_msgs;

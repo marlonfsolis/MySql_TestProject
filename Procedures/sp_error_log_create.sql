@@ -10,9 +10,9 @@ DELIMITER $$
 CREATE PROCEDURE sp_error_log_create 
 (
   IN level int,
-  IN message varchar(65500),
-  IN detail varchar(65500),
-  IN stack_trace varchar(65500),
+  IN message mediumtext,
+  IN detail longtext,
+  IN stack_trace longtext,
   IN error_date datetime
 ) 
 BEGIN
@@ -20,7 +20,7 @@ BEGIN
   --
   -- Variables
   --
-  DECLARE error_logid int DEFAULT 0;
+  DECLARE error_log_id int DEFAULT 0;
 
 
 
@@ -32,32 +32,23 @@ BEGIN
   --
   -- Log the error
   --
-	INSERT INTO error_log (error_message, error_detail, stack_trace, error_date)
-		VALUES (error_msg, error_detail, stack_trace, NOW());
+  INSERT INTO error_log
+    SET level = level,
+        message = message,
+        detail = detail,
+        stack_trace = stack_trace,
+        error_date = error_date;
+  
 
   SELECT LAST_INSERT_ID()
-    INTO error_logid;
-
-
-
-  INSERT INTO error_log_trace (error_logid, trace_message, trace_date)
-    SELECT 
-      error_logid,
-      lm.log_msg,
-      lm.log_date
-    FROM log_message lm;    
+    INTO error_log_id; 
 
 
   
-
   --
   -- Send error info back
   --
-  SET result = JSON_SET(result, 
-      '$.success', FALSE, 
-      '$.msg', error_msg, 
-      '$.errorLogId', error_logid, 
-      '$.recordCount', 0);
+  SELECT error_log_id;
 
 END
 $$

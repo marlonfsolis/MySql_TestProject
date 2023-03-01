@@ -124,8 +124,8 @@ BEGIN
 
   IF EXISTS (
     SELECT 1 
-    FROM groups_roles gr 
-    WHERE gr.name = name
+    FROM role r 
+    WHERE r.name = name
   ) 
   THEN
     SIGNAL SQLSTATE '12345'
@@ -140,7 +140,7 @@ BEGIN
   -- 
   -- Create group
   --
-  INSERT INTO groups_roles
+  INSERT INTO role
     SET name = name,
         description = description;
 
@@ -153,8 +153,8 @@ BEGIN
   SELECT
     name,
     description
-  FROM groups_roles gr
-  WHERE gr.name = name;
+  FROM role r
+  WHERE r.name = name;
 
   SELECT fn_add_log_message(log_msgs, 'Get final result done') INTO log_msgs;
 

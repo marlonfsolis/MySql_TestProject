@@ -3,6 +3,7 @@
 --
 CREATE TABLE error_log (
   error_log_id int NOT NULL AUTO_INCREMENT,
+  level int NOT NULL,
   message mediumtext NOT NULL,
   detail longtext NULL,
   stack_trace longtext NULL,

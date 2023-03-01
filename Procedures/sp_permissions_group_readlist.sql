@@ -1,6 +1,6 @@
 ﻿--
 -- Created on: 9/8/2022 
--- Description: Get a list of permissions assosiated with a group.
+-- Description: Get a list of permission assosiated with a group.
 --
 -- CALL sp_permissions_group_readlist(0, 10, 
 --    '{"group_name":"Group1", "permission_name":"Permission1"}', 
@@ -58,7 +58,7 @@ BEGIN
   --
   DROP TEMPORARY TABLE IF EXISTS response___sp_permissions_group_readlist;
   CREATE TEMPORARY TABLE response___sp_permissions_group_readlist 
-    SELECT * FROM permissions_groups pg LIMIT 0;
+    SELECT * FROM permission_role pg LIMIT 0;
 
 
 
@@ -83,7 +83,7 @@ BEGIN
   IF fetchRows = 0 THEN
     SELECT
       COUNT(1) INTO fetchRows
-    FROM permissions_groups pg;
+    FROM permission_role pg;
   END IF;  
   IF JSON_VALID(filterJson) = 0 THEN
     SET filterJson = '{}';
@@ -120,7 +120,7 @@ BEGIN
   SELECT
     pg.group_name,
     pg.permission_name
-  FROM permissions_groups pg
+  FROM permission_role pg
   
   -- filter
   WHERE (group_name_filter IS NULL OR group_name_filter = pg.group_name)

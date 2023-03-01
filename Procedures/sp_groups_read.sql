@@ -48,7 +48,7 @@ BEGIN
   --
   DROP TEMPORARY TABLE IF EXISTS response___sp_groups_read;
   CREATE TEMPORARY TABLE response___sp_groups_read 
-    SELECT * FROM groups_roles gr LIMIT 0;
+    SELECT * FROM role gr LIMIT 0;
 
 
 
@@ -77,10 +77,10 @@ BEGIN
   END IF;
   
   IF NOT EXISTS (
-    SELECT 1 FROM groups_roles gr WHERE gr.name = group_name
+    SELECT 1 FROM role gr WHERE gr.name = group_name
   ) THEN
     SIGNAL SQLSTATE '12345'
-      SET MESSAGE_TEXT = 'The groups_roles gr was not found.';
+      SET MESSAGE_TEXT = 'The role gr was not found.';
           
   END IF;
   
@@ -95,7 +95,7 @@ BEGIN
   SELECT
     gr.name,
     gr.description
-  FROM groups_roles gr
+  FROM role gr
   WHERE gr.name = group_name;
  
   SELECT fn_add_log_message(log_msgs, 'Get final result done') INTO log_msgs;

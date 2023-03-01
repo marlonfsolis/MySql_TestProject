@@ -53,7 +53,7 @@ BEGIN
   --
   DROP TEMPORARY TABLE IF EXISTS response___sp_groups_delete;
   CREATE TEMPORARY TABLE response___sp_groups_delete 
-    SELECT * FROM groups_roles gr LIMIT 0;
+    SELECT * FROM role gr LIMIT 0;
 
 
 
@@ -95,7 +95,7 @@ BEGIN
   END IF;
   
   IF NOT EXISTS (
-    SELECT 1 FROM groups_roles gr WHERE gr.name = name
+    SELECT 1 FROM role gr WHERE gr.name = name
   ) THEN
     SIGNAL SQLSTATE '12345'
       SET MESSAGE_TEXT = 'The group was not found.';
@@ -114,7 +114,7 @@ BEGIN
   SELECT
     name,
     description
-  FROM groups_roles gr
+  FROM role gr
   WHERE gr.name = name;
 
   SELECT fn_add_log_message(log_msgs, 'Save old values done') INTO log_msgs;
@@ -125,7 +125,7 @@ BEGIN
   -- Delete permission associations to this group first
   --
   DELETE
-    FROM permissions_groups pg
+    FROM permission_role pg
   WHERE pg.group_name = name;
 
 
@@ -133,7 +133,7 @@ BEGIN
   -- Then delete group
   --
   DELETE
-    FROM groups_roles gr
+    FROM role gr
     WHERE gr.name = name;
 
   SELECT fn_add_log_message(log_msgs, 'Delete record done') INTO log_msgs;

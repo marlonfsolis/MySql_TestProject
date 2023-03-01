@@ -9,6 +9,7 @@
     <Folder Name="Views" />
     <File RelPath="Functions" Link=".\Functions\fn_add_log_message.sql" />
     <File RelPath="Functions" Link=".\Functions\fn_is_numeric.sql" />
+    <File RelPath="Procedures" Link=".\Procedures\sp_error_log_create.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_error_log_readlist.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_error_log_truncate.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_groups_create.sql" />
@@ -19,14 +20,14 @@
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_handle_error_diagnostic.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_multiple_results.sql" />
-    <File RelPath="Procedures" Link=".\Procedures\sp_permissions_create.sql" />
-    <File RelPath="Procedures" Link=".\Procedures\sp_permissions_delete.sql" />
+    <File RelPath="Procedures" Link=".\Procedures\sp_permission_create.sql" />
+    <File RelPath="Procedures" Link=".\Procedures\sp_permission_delete.sql" />
+    <File RelPath="Procedures" Link=".\Procedures\sp_permission_read.sql" />
+    <File RelPath="Procedures" Link=".\Procedures\sp_permission_readlist.sql" />
+    <File RelPath="Procedures" Link=".\Procedures\sp_permission_update.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_group_delete.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_group_readlist.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_permissions_group_write.sql" />
-    <File RelPath="Procedures" Link=".\Procedures\sp_permissions_read.sql" />
-    <File RelPath="Procedures" Link=".\Procedures\sp_permissions_readlist.sql" />
-    <File RelPath="Procedures" Link=".\Procedures\sp_permissions_update.sql" />
     <File RelPath="Procedures" Link=".\Scripts\sp_tran_test1.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_tran_test1_2.sql" />
     <File RelPath="Procedures" Link=".\Procedures\sp_user_write.sql" />
@@ -38,34 +39,28 @@
     <File RelPath="Tables" Link=".\Tables\error_log.sql" />
     <File RelPath="Tables" Link=".\Tables\error_log_trace.sql" />
     <File RelPath="Tables" Link=".\Tables\flyway_schema_history.Tables.sql" />
-    <File RelPath="Tables" Link=".\Tables\groups_roles.sql" />
-    <File RelPath="Tables" Link=".\Tables\permissions.sql" />
-    <File RelPath="Tables" Link=".\Tables\permissions_group.sql" />
+    <File RelPath="Tables" Link=".\Tables\permission.sql" />
+    <File RelPath="Tables" Link=".\Tables\permission_role.sql" />
+    <File RelPath="Tables" Link=".\Tables\role.sql" />
     <File RelPath="Tables" Link=".\Tables\users.sql" />
     <File RelPath="" Link=".\PostDeployment.sql" />
     <File RelPath="" Link=".\PreDeployment.sql" />
   </Include>
   <Configurations Active="Default">
-    <Configuration Name="Default" CheckReferences="True" IgnoreErrors="False" OutputPath="" Target="" OutputType="SingleFile" KeepOriginalObjects="True" RecreateObjects="False" RecreateDatabase="False" ServerVersion="8.0.30" Database="AppTemplateDb" UseRegions="False" FullPaths="False" Definer="CURRENT_USER" ScriptDelimiter="$$" StorageEngine="INNODB" Collation="utf8mb4_0900_ai_ci" ConvertToLowercase="False" AnalyzePreAndPostDeploymentFilesAttribute="False" DefinerEffect="Keep" InnoDbDefaultRowFormat="dynamic" ServerTypeAttribute="MySql">
+    <Configuration Name="Default" CheckReferences="True" IgnoreErrors="False" OutputPath="" Target="" OutputType="SingleFile" KeepOriginalObjects="True" RecreateObjects="False" RecreateDatabase="False" ServerVersion="8.0.99" Database="test_project" UseRegions="False" FullPaths="False" Definer="CURRENT_USER" ScriptDelimiter="$$" StorageEngine="INNODB" Collation="utf8mb4_0900_ai_ci" ConvertToLowercase="False" AnalyzePreAndPostDeploymentFilesAttribute="False" DefinerEffect="Keep" InnoDbDefaultRowFormat="dynamic" ServerTypeAttribute="MySql">
       <ConnectionModel>
         <PropertyValue Name="Database">59f90733-4d68-4fdf-82a7-f0fcbf5460aa</PropertyValue>
-        <PropertyValue Name="ConnectionString" xml:space="preserve">User Id=marlonfsolis;Host=qualitysoft360.com;Database=AppTemplateDb;Character Set=utf8</PropertyValue>
+        <PropertyValue Name="ConnectionString" xml:space="preserve">User Id=marlonfsolis;Host=qualitysoft360.com;Database=test_project;Character Set=utf8</PropertyValue>
         <PropertyValue Name="ExecutionTimeout">0</PropertyValue>
       </ConnectionModel>
       <Build>
         <File RelPath="" Name="PreDeployment.sql" BuildAction="Build" />
         <File RelPath="Tables" Name="users.sql" BuildAction="Build" />
-        <File RelPath="Tables" Name="permissions.sql" BuildAction="Build" />
         <File RelPath="Tables" Name="flyway_schema_history.Tables.sql" BuildAction="Build" />
-        <File RelPath="Procedures" Name="sp_permissions_readlist.sql" BuildAction="Build" />
         <File RelPath="Tables" Name="error_log_trace.sql" BuildAction="Build" />
         <File RelPath="Scripts" Name="Temp 1.sql" BuildAction="Build" />
-        <File RelPath="Tables" Name="groups_roles.sql" BuildAction="Build" />
-        <File RelPath="Tables" Name="permissions_group.sql" BuildAction="Build" />
         <File RelPath="Tables" Name="error_log.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_handle_error.sql" BuildAction="Build" />
-        <File RelPath="Procedures" Name="sp_permissions_read.sql" BuildAction="Build" />
-        <File RelPath="Procedures" Name="sp_permissions_delete.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_groups_readlist.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_groups_read.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_error_log_readlist.sql" BuildAction="Build" />
@@ -84,11 +79,18 @@
         <File RelPath="Procedures" Name="sp_permissions_group_readlist.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_user_write.sql" BuildAction="Build" />
         <File RelPath="Functions" Name="fn_is_numeric.sql" BuildAction="Build" />
-        <File RelPath="Procedures" Name="sp_permissions_create.sql" BuildAction="Build" />
-        <File RelPath="Procedures" Name="sp_permissions_update.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_groups_create.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_groups_update.sql" BuildAction="Build" />
         <File RelPath="Procedures" Name="sp_multiple_results.sql" BuildAction="Build" />
+        <File RelPath="Procedures" Name="sp_error_log_create.sql" BuildAction="Build" />
+        <File RelPath="Tables" Name="role.sql" BuildAction="Build" />
+        <File RelPath="Tables" Name="permission.sql" BuildAction="Build" />
+        <File RelPath="Tables" Name="permission_role.sql" BuildAction="Build" />
+        <File RelPath="Procedures" Name="sp_permission_readlist.sql" BuildAction="Build" />
+        <File RelPath="Procedures" Name="sp_permission_create.sql" BuildAction="Build" />
+        <File RelPath="Procedures" Name="sp_permission_read.sql" BuildAction="Build" />
+        <File RelPath="Procedures" Name="sp_permission_delete.sql" BuildAction="Build" />
+        <File RelPath="Procedures" Name="sp_permission_update.sql" BuildAction="Build" />
         <File RelPath="" Name="PostDeployment.sql" BuildAction="Build" />
       </Build>
     </Configuration>

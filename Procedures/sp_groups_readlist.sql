@@ -56,7 +56,7 @@ BEGIN
   --
   DROP TEMPORARY TABLE IF EXISTS response___sp_permissions_readlist;
   CREATE TEMPORARY TABLE response___sp_permissions_readlist 
-    SELECT * FROM groups_roles gr LIMIT 0;
+    SELECT * FROM role gr LIMIT 0;
 
 
 
@@ -82,7 +82,7 @@ BEGIN
   IF fetchRows = 0 THEN
   SELECT
     COUNT(1) INTO fetchRows
-  FROM groups_roles gr;
+  FROM role gr;
   END IF;  
   IF JSON_VALID(filterJson) = 0 THEN
     SET filterJson = '{}';
@@ -121,7 +121,7 @@ BEGIN
   SELECT
     name,
     description
-  FROM groups_roles gr
+  FROM role gr
   
   -- filter
   WHERE (name_filter IS NULL OR name_filter = name)

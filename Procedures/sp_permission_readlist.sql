@@ -2,15 +2,15 @@
 -- Get permissions list.
 -- The list can be filteres and paginated.
 --
--- CALL sp_permissions_readlist(0, 10, '{"name":"Permission1"}', '{"description":"%"}', @result);
--- SELECT @result;
+-- CALL sp_permission_readlist(0, 10, 'Permission1', null, null);
+-- CALL sp_permission_readlist(0, 10, null, 'Permi%', null);
 -- 
 
-DROP PROCEDURE IF EXISTS sp_permissions_readlist;
+DROP PROCEDURE IF EXISTS sp_permission_readlist;
 DELIMITER $$
-CREATE PROCEDURE sp_permissions_readlist 
+CREATE PROCEDURE sp_permission_readlist 
 (
-  IN offsetRows int,
+  IN offset_rows int,
   IN fetchRows int,
   IN name varchar(100),
   IN name_s varchar(200),
@@ -24,7 +24,7 @@ BEGIN
   DECLARE _count int DEFAULT 0;
   DECLARE _total_count int DEFAULT 0;
 
-  SET _count = 1/0;
+--   SET _count = 1/0;
 
 
   --
@@ -33,14 +33,14 @@ BEGIN
   # This is a comment
   DROP TEMPORARY TABLE IF EXISTS permissions_temp;
   CREATE TEMPORARY TABLE permissions_temp 
-    SELECT * FROM permissions p LIMIT 0;
+    SELECT * FROM permission p LIMIT 0;
 
 
 
   --
   -- Default values
   --
-  SET offsetRows = IFNULL(offsetRows, 0);
+  SET offset_rows = IFNULL(offset_rows, 0);
   SET fetchRows = IFNULL(fetchRows, 10);
   SET name = IFNULL(name,'');
   SET name_s = IFNULL(name_s,'');
@@ -49,7 +49,7 @@ BEGIN
   IF fetchRows = 0 THEN
     SELECT
       COUNT(1) INTO fetchRows
-    FROM permissions p;
+    FROM permission p;
   END IF;  
 
 
@@ -61,7 +61,7 @@ BEGIN
   SELECT
     p.name,
     p.description
-  FROM permissions p
+  FROM permission p
   
   -- filter
   WHERE (name = '' OR p.name = name)
@@ -72,7 +72,7 @@ BEGIN
   
 
   
-  SELECT COUNT(*) FROM permissions p INTO _total_count;
+  SELECT COUNT(*) FROM permission p INTO _total_count;
   SELECT COUNT(*) FROM permissions_temp p INTO _count;
 
   
